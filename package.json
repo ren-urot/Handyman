@@ -1,0 +1,25 @@
+{
+  "name": "handyman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "gh-pages -d . --dotfiles",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ren-urot/Handyman.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ren-urot/Handyman/issues"
+  },
+  "homepage": "https://github.com/ren-urot/Handyman#readme",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}

@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HANDYWORKS</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0f0f0f;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+#app {
+  width: 378px;
+  height: 100vh;
+  max-height: 821px;
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 60px rgba(0,0,0,0.35);
+  border-radius: 25px;
+}
+
+@media (max-width: 500px) {
+  body { background: #fff; padding: 0; }
+  #app { width: 100%; border-radius: 0; box-shadow: none; height: 100vh; max-height: none; }
+}
+
+/* ── SCREENS ── */
+.screen {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+}
+.screen.active { display: flex; }
+
+/* ── BOTTOM NAV ── */
+.bnav {
+  position: absolute;
+  bottom: 18px; left: 50%; right: auto;
+  transform: translateX(-50%);
+  width: 358px;
+  height: 87px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.06);
+  border-radius: 19px 19px 19px 19px;
+  z-index: 10;
+  overflow: visible;
+  clip-path: none;
+}
+.bnav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 6px 0;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.bnav-icon {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+}
+.bnav-icon img { width: 44px; height: 44px; object-fit: contain; }
+.bnav-icon svg { width: 26px; height: 26px; color: #373737; }
+.bnav-icon svg path, .bnav-icon svg circle, .bnav-icon svg ellipse { fill: #373737; }
+.bnav-lbl { font-size: 10px; font-weight: 500; color: #373737; font-family: 'Roboto', sans-serif; transform: translateY(-6px); }
+.bnav-btn.active .bnav-lbl { color: #FF6A00; }
+
+/* Active home button pops out above the nav */
+.bnav-btn.active .bnav-icon {
+  width: 85px; height: 85px;
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.bnav-btn.active .bnav-icon img { width: 85px; height: 85px; }
+.bnav-btn.active .bnav-lbl {
+  position: absolute;
+  bottom: 22px;
+  left: calc(54% - 2px);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-weight: 800;
+  font-size: 11px;
+  text-align: center;
+  width: 100%;
+}
+
+/* ── COMMON ── */
+.btn-orange {
+  display: block; width: 100%;
+  padding: 20px;
+  height: 55px;
+  background: #FF6A00; color: #fff;
+  border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 500;
+  cursor: pointer; letter-spacing: 0.6px;
+  font-family: 'Roboto', sans-serif;
+}
+.btn-orange:active { opacity: 0.88; }
+
+.topbar {
+  display: flex; align-items: center; justify-content: center;
+  padding: 30px 20px;
+  position: relative;
+}
+.topbar-back {
+  position: absolute; left: 16px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center;
+  color: #2D2D2D; padding: 4px;
+}
+
+/* ════════════════════════════════════════
+   SCREEN 1 – SPLASH
+════════════════════════════════════════ */
+#s-splash {
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+#s-splash img {
+  width: 220px;
+  object-fit: contain;
+}
+
+/* ════════════════════════════════════════
+   SCREEN 2 – LOGIN
+════════════════════════════════════════ */
+#s-login { background: #555; position: relative; }
+
+.login-photo {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+}
+.login-photo img.bg {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.login-photo .logo-wrap {
+  position: absolute;
+  top: 67px; left: 0; right: 0;
+  display: flex; justify-content: center;
+}
+.login-photo .logo-wrap img {
+  height: 28px;
+}
+
+.login-card {
+  position: absolute;
+  bottom: 22px; left: 0; right: 0;
+  z-index: 1;
+  background: rgba(58, 58, 58, 0.9);
+  border-radius: 28px;
+  padding: 30px 23px 33px;
+  flex-shrink: 0;
+  transform: scale(0.9);
+  transform-origin: bottom center;
+}
+.login-card h2 {
+  color: #FF6A00;
+  font-size: 24px; font-weight: 700;
+  margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+.field-lbl { font-size: 12px; font-weight: 500; color: #aaa; margin-bottom: 6px; }
+.field-row {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 0 14px;
+  margin-bottom: 14px;
+  height: 55px;
+}
+.field-row input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: #fff; font-size: 14px; padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
+.field-row input::placeholder { color: rgba(255,255,255,0.35); }
+.eye-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.45); display: flex; align-items: center;
+}
+.forgot { font-size: 12px; color: #aaa; margin: -4px 0 18px; cursor: pointer; }
+.login-footer { text-align: center; margin-top: 16px; font-size: 13px; color: #888; }
+.login-footer span { color: #FF6A00; cursor: pointer; font-weight: 600; }
+
+/* ════════════════════════════════════════
+   SCREEN 3 – PROFILE SELECT
+════════════════════════════════════════ */
+#s-profile-select { background: #fff; }
+
+.select-heading {
+  text-align: center;
+  padding: 36px 24px 16px;
+}
+.select-heading h1 {
+  font-size: 26px; font-weight: 500; color: #2D2D2D;
+  font-family: 'Roboto', sans-serif;
+}
+.select-heading p { font-size: 14px; color: #aaa; margin-top: 6px; }
+
+.profile-cards {
+  display: flex; gap: 16px;
+  padding: 24px 24px;
+  justify-content: center;
+}
+.p-card {
+  flex: 1; max-width: 158px;
+  border: 1.5px solid #eee;
+  border-radius: 20px;
+  padding: 28px 14px 22px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px;
+  cursor: pointer; background: #fff;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow .2s, transform .15s;
+}
+.p-card:active { transform: scale(0.97); border-color: #FF6A00; }
+.p-card img { width: 72px; height: 72px; object-fit: contain; }
+.p-card span { font-size: 15px; font-weight: 700; color: #2D2D2D; }
+
+/* ════════════════════════════════════════
+   SCREEN 4 – HOME
+════════════════════════════════════════ */
+#s-home { background: #F7F7F7; }
+
+.home-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 12px;
+  background: #fff;
+}
+.hamburger {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; gap: 5px;
+  -webkit-tap-highlight-color: transparent;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: #2D2D2D; border-radius: 2px;
+}
+.home-header h1 { font-size: 17px; font-weight: 500; color: #2D2D2D; }
+
+.search-row {
+  display: flex; gap: 10px;
+  padding: 10px 16px 14px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+}
+.search-wrap {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  background: #EFEFEF; border-radius: 50px; padding: 11px 16px;
+}
+.search-wrap input {
+  flex: 1; border: none; background: transparent;
+  outline: none; font-size: 14px; color: #333;
+  font-family: 'Roboto', sans-serif;
+}
+.search-wrap input::placeholder { color: #B0B0B0; }
+.filter-btn {
+  width: 46px; height: 46px; flex-shrink: 0;
+  border-radius: 14px; background: #FF6A00;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.home-body {
+  flex: 1; overflow-y: auto;
+  padding: 14px 16px 80px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.home-body::-webkit-scrollbar { display: none; }
+
+/* Banner */
+.banner {
+  border-radius: 16px;
+  background: #EEF2F6;
+  overflow: hidden;
+  min-height: 110px;
+  position: relative;
+}
+.banner-text {
+  position: absolute;
+  top: 50%; left: 18px;
+  transform: translateY(-50%);
+  font-size: 16px; font-weight: 500; color: #2D2D2D;
+  line-height: 1.5;
+  z-index: 1;
+  max-width: 45%;
+}
+.banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  display: block;
+}
+
+/* Featured card */
+.featured-card {
+  border-radius: 16px; overflow: hidden;
+  height: 415px; position: relative;
+  cursor: pointer; background: #8aacbe;
+}
+.featured-card img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  display: block;
+}
+.featured-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 16px 18px;
+}
+.featured-overlay h3 { color: #fff; font-size: 18px; font-weight: 700; }
+.featured-overlay p  { color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+
+/* Pro cards */
+.section-title { font-size: 16px; font-weight: 700; color: #2D2D2D; margin-bottom: 10px; }
+.pro-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; }
+.pro-scroll::-webkit-scrollbar { display: none; }
+.pro-card {
+  flex-shrink: 0; width: 130px;
+  background: #fff; border-radius: 14px;
+  overflow: hidden; box-shadow: 0 2px 14px rgba(0,0,0,0.09);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.pro-card-img {
+  height: 96px; overflow: hidden;
+  background: linear-gradient(145deg, #c0d4e0, #8aacbe);
+}
+.pro-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.pro-card-body { padding: 10px 10px 12px; }
+.pro-name { font-size: 13px; font-weight: 700; color: #2D2D2D; }
+.pro-role { font-size: 11px; color: #aaa; margin-top: 2px; font-weight: 400; }
+.pro-rate { font-size: 13px; font-weight: 700; color: #FF6A00; margin-top: 6px; }
+
+/* ════════════════════════════════════════
+   SCREEN 5 – SIDEBAR
+════════════════════════════════════════ */
+#s-sidebar {
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+}
+.drawer {
+  position: absolute; top: 0; left: 0;
+  width: 76%; height: 100%;
+  background: #fff;
+  padding: 52px 0 32px;
+  box-shadow: 4px 0 28px rgba(0,0,0,0.15);
+  transform: translateX(-110%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  border-radius: 0 20px 20px 0;
+}
+.drawer::-webkit-scrollbar { display: none; }
+.drawer.open { transform: translateX(0); }
+.drawer-x {
+  position: absolute; top: 14px; left: 14px;
+  background: none; border: none; cursor: pointer;
+  font-size: 20px; color: #555; padding: 6px;
+  line-height: 1;
+}
+.drawer-profile {
+  display: flex; flex-direction: column;
+  align-items: center; padding: 6px 20px 24px;
+}
+.drawer-avatar {
+  width: 80px; height: 80px; border-radius: 50%;
+  overflow: hidden; margin-bottom: 12px;
+  border: 2px solid #f0f0f0;
+}
+.drawer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.drawer-name { font-size: 17px; font-weight: 700; color: #2D2D2D; }
+.drawer-role { font-size: 13px; color: #aaa; margin-top: 2px; }
+.drawer-divider { height: 1px; background: #f0f0f0; margin: 0 20px 6px; }
+.drawer-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 26px;
+  font-size: 15px; font-weight: 500; color: #333;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.drawer-item:active { background: #fafafa; }
+.drawer-item svg { flex-shrink: 0; color: #666; }
+.drawer-logout { color: #E53935; margin-top: 4px; }
+.drawer-logout svg { color: #E53935; }
+
+/* ════════════════════════════════════════
+   SCREEN 6 – PROFILE DETAIL
+════════════════════════════════════════ */
+#s-profile { background: #fff; }
+
+.hero {
+  height: 391px; flex-shrink: 0;
+  position: relative;
+  background: #888;
+  overflow: hidden;
+  border-radius: 16px;
+  margin: 0 12px 0;
+}
+.hero img.hero-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  display: block;
+  z-index: 0;
+}
+.hero-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  flex-shrink: 0;
+  background: #fff;
+}
+.hero-icon-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: #f0f0f0; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-bar-title { display: none; }
+.hero-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 14px 14px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+  z-index: 2;
+}
+.hero-name { color: #fff; font-size: 25px; font-weight: 400; }
+.hero-sub  { color: rgba(255,255,255,0.85); font-size: 12px; margin-top: 2px; }
+.hero-rating {
+  position: absolute; bottom: 16px; right: 14px; z-index: 3;
+  display: flex; align-items: center; gap: 4px;
+  color: #fff; font-size: 25px; font-weight: 500;
+}
+
+.profile-body { flex: 1; overflow-y: auto; padding-bottom: 90px; }
+.profile-body::-webkit-scrollbar { display: none; }
+
+.rate-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 25px; border-bottom: 1px solid #f5f5f5;
+  background: #fff;
+}
+.rate-badge {
+  background: #26C6A0; color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 5px 10px; border-radius: 20px;
+  letter-spacing: 0.5px; white-space: nowrap;
+}
+.rate-price {
+  font-size: 40px; font-weight: 700; color: #2D2D2D;
+  line-height: 1;
+}
+.rate-price sup { font-size: 16px; vertical-align: super; }
+.rate-actions { margin-left: auto; display: flex; gap: 12px; }
+.rate-icon-btn {
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.p-section { padding: 7px 18px; border-bottom: 1px solid #f8f8f8; }
+.p-section.skills-section { padding-right: 0; }
+.p-section.proj-section { padding-right: 0; }
+.p-section h3 { font-size: 15px; font-weight: 700; color: #2D2D2D; margin-bottom: 12px; }
+.skills {
+  display: flex; flex-wrap: nowrap; gap: 8px;
+  overflow-x: auto; padding-bottom: 4px;
+}
+.skills::-webkit-scrollbar { display: none; }
+.skill-pill {
+  border: 1px solid #ddd; border-radius: 50px;
+  padding: 7px 16px; font-size: 13px; font-weight: 400; color: #555;
+  background: #f5f5f5; white-space: nowrap; flex-shrink: 0;
+}
+.proj-grid { display: flex; gap: 10px; overflow-x: auto; }
+.proj-grid::-webkit-scrollbar { display: none; }
+.proj-thumb {
+  flex-shrink: 0; width: 92px; height: 92px; border-radius: 12px;
+  overflow: hidden;
+  background: #eee;
+}
+.proj-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.profile-cta {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 14px 18px 22px;
+  background: #fff; border-top: 1px solid #f5f5f5;
+}
+
+/* ════════════════════════════════════════
+   SCREEN 7 – CHAT
+════════════════════════════════════════ */
+#s-chat { background: #2D2D2D; }
+
+.chat-dark {
+  background: #2D2D2D;
+  padding: 18px 18px 20px;
+  flex-shrink: 0;
+  width: 100%;
+}
+.chat-hdr {
+  display: flex; align-items: center; justify-content: center;
+  position: relative; margin-bottom: 20px;
+}
+.chat-back {
+  position: absolute; left: 0;
+  background: none; border: none; cursor: pointer;
+  color: #fff; display: flex; align-items: center; padding: 4px;
+}
+.chat-hdr h2 { color: #fff; font-size: 17px; font-weight: 700; }
+
+.prev-lbl { color: rgba(255,255,255,0.65); font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+.prev-row { display: flex; gap: 16px; overflow-x: auto; }
+.prev-row::-webkit-scrollbar { display: none; }
+.prev-contact { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+.prev-av {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 2.5px solid #FF6A00;
+  overflow: hidden;
+}
+.prev-av img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.14); }
+.prev-contact span { color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 400; }
+
+.chat-list {
+  flex: 1; overflow-y: auto;
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  margin-top: -14px;
+  padding: 0 0 80px;
+}
+.chat-list::-webkit-scrollbar { display: none; }
+.chat-list-title { font-size: 18px; font-weight: 800; color: #2D2D2D; padding: 20px 18px 8px; }
+
+.chat-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; border-bottom: 1px solid #f8f8f8;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.chat-item:active { background: #fafafa; }
+.chat-av {
+  width: 50px; height: 50px; border-radius: 50%;
+  flex-shrink: 0; overflow: hidden; background: #eee;
+}
+.chat-av img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.14); }
+.chat-info { flex: 1; min-width: 0; }
+.chat-cname { font-size: 14px; font-weight: 700; color: #2D2D2D; }
+.chat-msg { font-size: 12px; color: #aaa; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.chat-time { font-size: 11px; color: #bbb; }
+.unread-dot {
+  background: #4CAF50; color: #fff;
+  border-radius: 50%; width: 20px; height: 20px;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.check-img { width: 16px; height: 16px; object-fit: contain; }
+
+/* ════════════════════════════════════════
+   SCREEN 8 – CONTRACT
+════════════════════════════════════════ */
+#s-contract { background: #F7F7F7; }
+.contract-hdr {
+  padding: 18px 20px; background: #fff;
+  border-bottom: 1px solid #f0f0f0; text-align: center;
+}
+.contract-hdr h2 { font-size: 17px; font-weight: 700; color: #2D2D2D; }
+.contract-body {
+  flex: 1; overflow-y: auto;
+  padding: 16px 18px 80px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.contract-body::-webkit-scrollbar { display: none; }
+.contract-card {
+  background: #fff; border-radius: 16px;
+  padding: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.c-job  { font-size: 15px; font-weight: 700; color: #2D2D2D; }
+.c-who  { font-size: 13px; color: #888; margin-top: 3px; }
+.c-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.c-badge { font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: 0.3px; }
+.c-badge.active  { background: #E8F5E9; color: #2E7D32; }
+.c-badge.pending { background: #FFF3E0; color: #E65100; }
+.c-badge.done    { background: #E3F2FD; color: #1565C0; }
+.c-date { font-size: 12px; color: #bbb; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ SPLASH ══ -->
+  <div id="s-splash" class="screen active">
+    <div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#fff;">
+      <img src="assets/logo.png" style="width:220px;object-fit:contain;" alt="HANDYWORKS">
+    </div>
+  </div>
+
+  <!-- ══ LOGIN ══ -->
+  <div id="s-login" class="screen">
+    <div class="login-photo">
+      <img class="bg" src="assets/login-bg.png" alt="Handyman">
+      <div class="logo-wrap">
+        <img src="assets/logo.png" alt="HANDYWORKS">
+      </div>
+    </div>
+    <div class="login-card">
+      <h2>Login</h2>
+      <div class="field-lbl">Email</div>
+      <div class="field-row">
+        <input type="email" placeholder="Enter your email" id="em">
+      </div>
+      <div class="field-lbl">Password</div>
+      <div class="field-row">
+        <input type="password" placeholder="Enter your password" id="pw">
+        <button class="eye-btn" onclick="togglePw()" type="button">
+          <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <div class="forgot">Forgot Password?</div>
+      <button class="btn-orange" onclick="show('s-profile-select')">Sign In</button>
+      <div class="login-footer">Don't have an account? <span onclick="show('s-profile-select')">Sign Up</span></div>
+    </div>
+  </div>
+
+  <!-- ══ PROFILE SELECT ══ -->
+  <div id="s-profile-select" class="screen">
+    <div class="topbar">
+      <button class="topbar-back" onclick="show('s-login')" type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <img src="assets/logo-sm.png" style="height:14px;object-fit:contain;" alt="HANDYWORKS">
+    </div>
+    <div class="select-heading">
+      <h1>Select Profile</h1>
+      <p>Choose who you want to be</p>
+    </div>
+    <div class="profile-cards">
+      <div class="p-card" onclick="show('s-home')">
+        <img src="assets/icon-contractor.png" alt="Contractor">
+        <span>Contractor</span>
+      </div>
+      <div class="p-card" onclick="show('s-home')">
+        <img src="assets/icon-tradesman.png" alt="Tradesman">
+        <span>Tradesman</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HOME ══ -->
+  <div id="s-home" class="screen">
+    <div class="home-header">
+      <button class="hamburger" onclick="openDrawer()" type="button">
+        <span></span><span></span><span></span>
+      </button>
+      <h1>Home</h1>
+      <div style="width:28px;"></div>
+    </div>
+    <div class="search-row">
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.5" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" placeholder="Search">
+      </div>
+      <button class="filter-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+          <line x1="11" y1="18" x2="13" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="home-body">
+      <!-- Banner -->
+      <div class="banner">
+        <div class="banner-text">Let a professional<br>handyman take over.</div>
+        <img class="banner-img" src="assets/jigsaw-tool.png" alt="">
+      </div>
+      <!-- Featured -->
+      <div class="featured-card" onclick="show('s-profile')">
+        <img src="assets/handyman-tablet.png" alt="Featured handyman">
+      </div>
+    </div>
+    <!-- Bottom Nav -->
+    <div class="bnav">
+      <button class="bnav-btn" onclick="show('s-connect')" type="button">
+        <div class="bnav-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.18612 15.4256C7.70388 15.419 7.42424 14.9366 7.66294 14.4924C7.9281 13.999 8.21605 13.5181 8.49588 13.0328C8.91747 12.3013 9.33984 11.5701 9.76393 10.8399C9.89758 10.6097 10.1011 10.49 10.368 10.5137C10.6316 10.5371 10.8472 10.6684 10.8995 10.9341C10.9321 11.1 10.9236 11.3138 10.8441 11.4561C10.162 12.6742 9.4615 13.8822 8.76085 15.0898C8.63706 15.3034 8.45282 15.4426 8.18612 15.4256Z" fill="#373737"/>
+<path d="M18.1853 14.6713C18.16 14.9791 17.9907 15.2026 17.6965 15.2909C17.42 15.3737 17.1477 15.2588 16.9787 14.9693C16.5357 14.2105 16.0986 13.4483 15.6591 12.6876C15.4793 12.376 15.2954 12.0667 15.1201 11.7524C14.9165 11.388 15.0009 11.0182 15.3219 10.8334C15.6454 10.6474 15.997 10.7596 16.2118 11.1298C16.829 12.1937 17.4433 13.2596 18.0542 14.3274C18.1145 14.4326 18.1425 14.5562 18.1853 14.6713Z" fill="#373737"/>
+<path d="M12.8936 19.8974C12.5158 19.8974 12.1379 19.9061 11.7605 19.8946C11.4687 19.8857 11.2472 19.7482 11.146 19.4623C11.056 19.2084 11.1244 18.9521 11.3413 18.7885C11.4357 18.7175 11.5649 18.6555 11.6792 18.6539C12.493 18.6421 13.3071 18.6394 14.1209 18.6508C14.4446 18.6555 14.6636 18.8928 14.6875 19.2099C14.7122 19.5363 14.5203 19.8356 14.1997 19.8613C13.7669 19.8961 13.3293 19.87 12.8938 19.87C12.8936 19.8791 12.8936 19.8884 12.8936 19.8974Z" fill="#373737"/>
+<path d="M18.1578 5.26986C18.1827 8.13619 15.8262 10.5087 12.9292 10.5342C10.0503 10.5595 7.6546 8.19819 7.64262 5.29515C7.63065 2.35833 9.93906 0.0618948 12.7882 0.00125399C15.8755 -0.064408 18.1988 2.45836 18.1578 5.26986V5.26986ZM9.76119 7.71171C9.7946 7.66246 9.82647 7.61553 9.85833 7.5686C10.361 6.82392 11.0497 6.40774 11.9589 6.39692C12.6055 6.3892 13.2525 6.39596 13.8992 6.39692C14.3371 6.3975 14.7586 6.49754 15.1047 6.75884C15.4595 7.02651 15.7691 7.35424 16.0968 7.65435C17.2192 6.31929 17.2648 3.90969 15.693 2.38845C14.1325 0.878614 11.6295 0.88209 10.0924 2.40564C8.51767 3.96666 8.60805 6.35057 9.76119 7.71171V7.71171ZM12.8842 7.65628V7.65821C12.5485 7.65821 12.2125 7.64894 11.877 7.66034C11.4217 7.67598 10.928 8.05238 10.8054 8.48266C10.7865 8.5489 10.8357 8.68331 10.8929 8.71518C12.2264 9.45812 13.5659 9.45967 14.9081 8.73005C15.0323 8.66246 15.0448 8.59119 14.9995 8.46701C14.832 8.00931 14.3855 7.67212 13.8913 7.65802C13.5559 7.64856 13.2198 7.65628 12.8842 7.65628Z" fill="#373737"/>
+<path d="M12.9048 6.04654C11.7381 6.04654 10.792 5.10757 10.791 3.94883C10.7901 2.78005 11.7553 1.81521 12.916 1.82428C14.066 1.83336 15.0268 2.80149 15.0233 3.94768C15.0198 5.10796 14.0722 6.04674 12.9048 6.04654V6.04654ZM12.9096 4.78602C13.3756 4.78487 13.7595 4.40828 13.764 3.94806C13.7682 3.48843 13.3609 3.08113 12.8982 3.08248C12.4471 3.08364 12.0533 3.48051 12.0517 3.93532C12.05 4.41967 12.4208 4.78738 12.9096 4.78602Z" fill="#373737"/>
+<path d="M25.8164 20.5456C25.816 23.4602 23.4458 25.8146 20.514 25.8128C17.6328 25.8111 15.2493 23.4171 15.2866 20.4967C15.324 17.5574 17.6562 15.2857 20.5895 15.2774C23.4503 15.2692 25.8168 17.6655 25.8164 20.5456V20.5456ZM23.6909 22.9984C24.9076 21.5371 24.9012 19.1288 23.2759 17.602C21.7 16.1215 19.1575 16.1905 17.6589 17.7687C16.1475 19.3602 16.2765 21.6678 17.4173 22.9942C17.4407 22.9575 17.4625 22.9241 17.4839 22.8903C17.992 22.0954 18.7141 21.6827 19.6612 21.6771C20.2157 21.6738 20.7703 21.6858 21.3246 21.6742C22.3667 21.6524 23.1424 22.0983 23.6909 22.9984V22.9984ZM22.6892 23.9181C22.5271 23.3069 22.0803 22.9438 21.4754 22.9374C20.8626 22.9307 20.2496 22.931 19.6369 22.937C19.0225 22.943 18.5656 23.3154 18.4148 23.9187C19.6598 24.7599 21.4308 24.7636 22.6892 23.9181Z" fill="#373737"/>
+<path d="M22.6583 19.238C22.6583 20.4703 21.6052 21.3581 20.5193 21.3323C19.3694 21.3048 18.4475 20.3879 18.4482 19.2231C18.449 18.0513 19.3868 17.1063 20.5444 17.1113C21.7269 17.1162 22.6616 18.0567 22.6583 19.238V19.238ZM20.5515 20.0683C21.0259 20.069 21.3999 19.7007 21.4019 19.2309C21.4036 18.761 21.0336 18.3815 20.5639 18.3713C20.0909 18.3609 19.7059 18.7475 19.7078 19.2309C19.7097 19.7108 20.0691 20.0673 20.5515 20.0683Z" fill="#373737"/>
+<path d="M5.28618 25.8127C2.39628 25.8144 0.000772601 23.4542 1.07091e-07 20.6049C-0.000579263 17.6387 2.34973 15.2536 5.29313 15.2795C8.20408 15.3054 10.5117 17.6082 10.532 20.5365C10.5521 23.4332 8.1643 25.8111 5.28618 25.8127V25.8127ZM2.12339 23.0006C2.68364 22.0827 3.47796 21.6422 4.5386 21.6733C5.10097 21.6897 5.66412 21.6783 6.22688 21.6773C6.76531 21.6765 7.25719 21.8363 7.66913 22.1732C7.95321 22.406 8.18902 22.698 8.44471 22.9618C9.69634 21.4199 9.5011 18.9716 7.99995 17.6095C6.40301 16.1605 3.99379 16.182 2.48782 17.6509C0.931628 19.1686 0.910577 21.524 2.12339 23.0006V23.0006ZM7.41131 23.9133C7.21258 23.3258 6.802 22.9519 6.30838 22.9421C5.61198 22.9282 4.9148 22.927 4.2184 22.9425C3.69851 22.9542 3.21357 23.4143 3.14038 23.9255C4.38487 24.7626 6.14519 24.7607 7.41131 23.9133Z" fill="#373737"/>
+<path d="M3.15727 19.2156C3.16519 18.0408 4.12192 17.0895 5.27371 17.1117C6.47185 17.1347 7.36369 18.0611 7.37103 19.2577C7.3776 20.3471 6.41218 21.3689 5.20496 21.3322C4.0777 21.298 3.14974 20.3639 3.15727 19.2156V19.2156ZM5.27275 20.068C5.75092 20.0671 6.1109 19.7032 6.10897 19.2231C6.10723 18.7498 5.73933 18.3761 5.27043 18.3707C4.80597 18.3655 4.42281 18.7432 4.41644 19.2125C4.40968 19.6951 4.78395 20.069 5.27275 20.068Z" fill="#373737"/>
+</svg>
+        </div>
+        <span class="bnav-lbl">Connect</span>
+      </button>
+      <button class="bnav-btn active" onclick="show('s-home')" type="button">
+        <div class="bnav-icon">
+          <img src="assets/nav-home-active.png" alt="Home">
+        </div>
+        <span class="bnav-lbl">Home</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-contract')" type="button">
+        <div class="bnav-icon">
+          <svg width="22" height="24" viewBox="0 0 21 24" fill="none"><path d="M0.00150617 11.5657C0.00150617 8.96593 0.00460579 6.36622 8.01672e-06 3.76646C-0.00185176 2.72938 0.319786 1.82362 1.05362 1.08043C1.73781 0.387616 2.57647 0.0122 3.54541 0.00879037C7.29864 -0.00448635 11.0519 -9.52207e-05 14.8052 0.0049675C16.4908 0.00729222 18.0082 1.30836 18.2757 2.9694C18.3164 3.22264 18.3424 3.48125 18.3432 3.73748C18.349 5.5022 18.3476 7.26692 18.3455 9.03169C18.3448 9.60011 18.1235 9.92346 17.6623 10.05C17.1759 10.1835 16.6615 9.86446 16.5728 9.36666C16.5474 9.22366 16.5382 9.07602 16.5379 8.93049C16.5357 7.2088 16.5338 5.48712 16.538 3.76548C16.54 2.97477 16.2434 2.35319 15.5124 2.00794C15.2641 1.89068 14.9683 1.82031 14.694 1.81938C11.0182 1.8073 7.34245 1.809 3.66666 1.81277C2.66925 1.8138 1.80135 2.54098 1.80642 3.78439C1.81902 6.89197 1.81065 9.99965 1.81065 13.1073C1.81065 15.1905 1.81277 17.2737 1.80926 19.357C1.80817 20.0037 2.00247 20.5552 2.53039 20.9617C2.87171 21.2245 3.26376 21.333 3.68613 21.335C4.64164 21.3396 5.59715 21.3359 6.55272 21.3366C7.13436 21.3371 7.53571 21.7005 7.54015 22.2286C7.5447 22.7721 7.14392 23.1437 6.5505 23.1442C5.62081 23.1448 4.69113 23.1443 3.76145 23.1443C1.5725 23.1443 0.00662055 21.5854 0.0026427 19.3907C-0.00211006 16.7824 0.00150617 14.174 0.00150617 11.5657ZM18.0804 12.291C19.197 12.3596 20.0744 12.8805 20.5235 13.9604C20.952 14.9906 20.8114 15.9972 20.0347 16.8155C18.8856 18.0262 17.6833 19.1866 16.5033 20.368C16.047 20.8248 15.5987 21.2901 15.128 21.7314C14.958 21.8908 14.7487 22.0457 14.5302 22.1094C13.336 22.4577 12.1359 22.7865 10.9328 23.1025C10.2695 23.2768 9.68556 22.7228 9.83928 22.0548C9.97173 21.4791 10.1622 20.9164 10.3333 20.3498C10.5116 19.7588 10.6844 19.1654 10.8866 18.5823C10.9628 18.3623 11.0764 18.1309 11.2374 17.9684C12.8608 16.3299 14.4961 14.7032 16.1314 13.0764C16.6572 12.5534 17.3068 12.3204 18.0804 12.291ZM15.9176 15.8513C15.866 15.9002 15.8035 15.9569 15.7438 16.0164C15.0072 16.7505 14.297 17.5137 13.5268 18.2106C12.8635 18.8108 12.362 19.4727 12.2236 20.3761C12.1965 20.553 12.1158 20.7219 12.0468 20.9342C12.6304 20.7701 13.1588 20.6286 13.6817 20.4695C13.8141 20.4292 13.9499 20.354 14.0489 20.2584C14.5186 19.8049 14.9758 19.3385 15.438 18.8773C16.0264 18.2902 16.6153 17.7037 17.1909 17.1301C16.7635 16.7009 16.3531 16.2888 15.9176 15.8513ZM18.513 15.7962C18.8319 15.5417 18.9964 15.2195 18.9013 14.7941C18.8168 14.4159 18.5584 14.202 18.1989 14.1258C17.794 14.04 17.4893 14.2323 17.2441 14.5312C17.6685 14.9543 18.0855 15.37 18.513 15.7962ZM9.17573 7.23486C7.62674 7.23486 6.07776 7.23714 4.52877 7.23352C4.08008 7.23242 3.73148 6.94277 3.64248 6.51807C3.55331 6.09234 3.74746 5.68839 4.14173 5.52072C4.27195 5.46534 4.42212 5.43103 4.56328 5.43082C7.63541 5.42587 10.7075 5.42633 13.7797 5.42762C14.3326 5.42788 14.7265 5.81027 14.7244 6.3353C14.7223 6.8596 14.3284 7.23382 13.771 7.23445C12.2392 7.23583 10.7075 7.23486 9.17573 7.23486ZM9.17478 10.8511C7.63442 10.8511 6.09401 10.8525 4.55365 10.8502C4.08525 10.8495 3.73298 10.5675 3.64231 10.1333C3.55345 9.70773 3.7482 9.30369 4.14259 9.13653C4.27292 9.08128 4.42305 9.04726 4.56424 9.04699C7.63639 9.04203 10.7085 9.04256 13.7807 9.04385C14.3331 9.04403 14.7269 9.42725 14.7243 9.95245C14.7218 10.4767 14.328 10.8501 13.7701 10.8506C12.2383 10.852 10.7066 10.8511 9.17478 10.8511ZM7.33234 14.4664C6.42054 14.4664 5.50879 14.4673 4.59698 14.4661C4.0221 14.4653 3.61615 14.0898 3.61621 13.5624C3.61626 13.0351 4.02216 12.6592 4.59709 12.6589C6.42928 12.6579 8.26141 12.658 10.0936 12.6589C10.6694 12.6591 11.0754 13.0347 11.0754 13.5625C11.0754 14.0904 10.6693 14.4654 10.0935 14.4661C9.17312 14.4672 8.25273 14.4664 7.33234 14.4664Z" fill="#373737"/></svg>
+        </div>
+        <span class="bnav-lbl">Contract</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-chat')" type="button">
+        <div class="bnav-icon">
+          <svg width="24" height="24" viewBox="0 0 23 23" fill="none"><path d="M20.3761 16.9967C20.0383 16.16 19.7021 15.3533 19.3903 14.5372C19.3141 14.3375 19.2654 14.0994 19.2962 13.8927C19.3568 13.488 19.707 13.2104 20.1038 13.1782C20.4819 13.1475 20.8479 13.3824 21.0098 13.7776C21.3361 14.5739 21.6553 15.3731 21.9768 16.1714C22.2707 16.9008 22.5566 17.6335 22.8592 18.3593C23.141 19.0351 22.5984 19.6821 21.981 19.6219C21.8092 19.6051 21.6389 19.5282 21.4773 19.4575C19.9948 18.8087 18.5152 18.1535 17.0315 17.5074C16.9417 17.4683 16.8181 17.4646 16.7219 17.4895C16.1918 17.6272 15.6643 17.7757 15.1386 17.9297C15.0625 17.9521 14.9787 18.0097 14.9358 18.0754C13.8157 19.7935 12.2442 20.8885 10.2808 21.428C8.58372 21.8944 6.89562 21.8322 5.22879 21.266C5.09365 21.2201 4.98464 21.224 4.85335 21.2826C3.6739 21.8087 2.49292 22.3315 1.3084 22.8462C0.735761 23.0949 0.169264 22.8361 0.0397272 22.2445C-0.00427338 22.0436 0.0420572 21.7976 0.118543 21.5998C0.495819 20.6242 0.894243 19.6567 1.29276 18.6895C1.35594 18.5362 1.34702 18.4255 1.24916 18.2842C0.360636 17.0006 -0.0611784 15.5715 0.00715243 14.0145C0.0729292 12.5161 0.591795 11.1738 1.51097 9.98674C1.99466 9.36209 2.57137 8.83807 3.21171 8.3787C3.2834 8.32731 3.34851 8.22439 3.36002 8.13782C3.52146 6.924 3.88306 5.78065 4.5156 4.72621C5.265 3.47703 6.25147 2.45843 7.47139 1.66593C8.72218 0.853353 10.085 0.343672 11.564 0.128598C12.4184 0.00434819 13.2754 -0.0480761 14.1282 0.0541737C17.7088 0.483515 20.4701 2.16342 22.1215 5.44362C22.8002 6.79177 23.0466 8.2459 22.9022 9.75688C22.8823 9.96429 22.8774 10.1751 22.835 10.378C22.7343 10.8602 22.2844 11.1826 21.8381 11.1113C21.3304 11.0302 20.9924 10.5776 21.0675 10.0553C21.3317 8.21726 20.8929 6.55241 19.8109 5.0598C18.9792 3.9126 17.8866 3.07829 16.5882 2.51426C15.1933 1.90829 13.7324 1.68116 12.226 1.84655C10.1066 2.07914 8.28903 2.94325 6.8556 4.55124C6.05217 5.45253 5.50996 6.49515 5.25913 7.6742C4.89001 9.40913 5.21441 11.034 6.1485 12.5294C7.38213 14.5042 9.1797 15.6882 11.4418 16.1592C12.4768 16.3747 13.5337 16.4068 14.5749 16.1861C15.2109 16.0513 15.8372 15.8616 16.4561 15.6605C16.79 15.5521 17.0862 15.5596 17.4017 15.7022C18.3553 16.1334 19.3139 16.5531 20.271 16.9766C20.2907 16.9853 20.3142 16.9853 20.3761 16.9967ZM2.55627 20.3386C3.24881 20.0321 3.88736 19.7533 4.52241 19.4668C4.8305 19.3278 5.12488 19.3338 5.45036 19.435C6.02215 19.6128 6.60034 19.8071 7.19013 19.8828C8.77886 20.0869 10.2684 19.7477 11.6255 18.889C11.9664 18.6733 12.2722 18.4023 12.5941 18.1567L12.5702 18.1008C10.3839 17.9662 8.41301 17.2618 6.70962 15.8748C4.99942 14.4823 3.90273 12.7063 3.44986 10.5209C3.39936 10.5667 3.36589 10.5946 3.33524 10.6252C1.43865 12.5209 1.27475 15.5078 2.96693 17.5916C3.29532 17.996 3.36549 18.3943 3.15118 18.8697C2.94188 19.334 2.767 19.8139 2.55627 20.3386ZM10.3957 9.08974C10.4001 9.57995 9.99775 9.99085 9.50904 9.99529C9.01888 9.99975 8.60792 9.59739 8.60355 9.10869C8.59908 8.61883 9.00173 8.20754 9.4901 8.20316C9.98029 8.19869 10.3912 8.6011 10.3957 9.08974ZM13.0797 8.20313C13.5683 8.20128 13.9778 8.60714 13.9796 9.09527C13.9814 9.58399 13.5756 9.99346 13.0875 9.99526C12.5988 9.99712 12.1893 9.59116 12.1875 9.10311C12.1857 8.61442 12.5915 8.20496 13.0797 8.20313ZM16.6561 9.99437C16.1687 9.98863 15.7668 9.57535 15.7725 9.08582C15.7782 8.5984 16.1916 8.19643 16.6811 8.20221C17.1685 8.20798 17.5704 8.62126 17.5646 9.11078C17.5589 9.59819 17.1456 10.0002 16.6561 9.99437Z" fill="#373737"/></svg>
+        </div>
+        <span class="bnav-lbl">Chat</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ SIDEBAR ══ -->
+  <div id="s-sidebar" class="screen" onclick="closeSidebarBg(event)" style="background:rgba(0,0,0,0.42);z-index:200;">
+    <div class="drawer" id="drawer">
+      <button class="drawer-x" onclick="closeDrawer()" type="button">✕</button>
+      <div class="drawer-profile">
+        <div class="drawer-avatar">
+          <img src="assets/av-john.png" alt="John Anderson">
+        </div>
+        <div class="drawer-name">John Anderson</div>
+        <div class="drawer-role">All around handyman</div>
+      </div>
+      <div class="drawer-divider"></div>
+      <div class="drawer-item" onclick="closeDrawer(); show('s-home');">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none"/></svg>
+        Home
+      </div>
+      <div class="drawer-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+        Profile
+      </div>
+      <div class="drawer-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Payment
+      </div>
+      <div class="drawer-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </div>
+      <div class="drawer-divider" style="margin-top:10px;"></div>
+      <div class="drawer-item drawer-logout" onclick="closeDrawer(); show('s-login');">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PROFILE DETAIL ══ -->
+  <div id="s-profile" class="screen">
+    <div class="hero-bar">
+      <button class="hero-icon-btn" onclick="show('s-home')" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span style="font-size:16px;font-weight:700;color:#2D2D2D;">John Anderson</span>
+      <button class="hero-icon-btn" type="button" onclick="showFilterToast()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D2D2D" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="hero">
+      <img class="hero-bg" src="assets/Rectangle 17138.png" alt="John Anderson" style="object-position:center top;">
+      <div class="hero-overlay">
+        <div class="hero-name">John Anderson</div>
+        <div class="hero-sub">All around handyman</div>
+      </div>
+      <div class="hero-rating">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        4.5
+      </div>
+    </div>
+    <div class="profile-body">
+      <div class="rate-row">
+        <span class="rate-badge">HOURLY RATE</span>
+        <span class="rate-price"><sup>$</sup>10</span>
+        <div class="rate-actions">
+          <!-- Share icon -->
+          <button class="rate-icon-btn" type="button" onclick="shareProfile()" id="btn-share">
+            <svg width="20" height="22" viewBox="0 0 17.7824 19.4667" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.1944 12.2905C13.0288 12.2905 11.9505 12.8498 11.2751 13.796L6.95514 10.9716C7.10196 10.5746 7.17633 10.1582 7.17633 9.73167C7.17633 9.32023 7.10653 8.91705 6.96885 8.53128L11.2971 5.70147C11.9737 6.62827 13.044 7.17633 14.1944 7.17633C16.1729 7.17633 17.7826 5.56678 17.7826 3.58817C17.7826 1.60973 16.1729 0 14.1944 0C12.216 0 10.6063 1.60973 10.6063 3.58817C10.6063 3.73727 10.6157 3.88796 10.6346 4.03724L5.99317 7.07189C5.33152 6.47213 4.48297 6.14368 3.58817 6.14368C1.60973 6.14368 0 7.75323 0 9.73167C0 11.7103 1.60973 13.3198 3.58817 13.3198C4.46697 13.3198 5.30427 13.0012 5.9617 12.4194L10.6298 15.4713C10.6142 15.6076 10.6063 15.7442 10.6063 15.8787C10.6063 17.8571 12.216 19.4667 14.1944 19.4667C16.1729 19.4667 17.7826 17.8571 17.7826 15.8787C17.7826 13.9001 16.1729 12.2905 14.1944 12.2905ZM16.0271 15.8787C16.0271 16.8892 15.2049 17.7114 14.1944 17.7114C13.1839 17.7114 12.3617 16.8892 12.3617 15.8787C12.3617 14.8682 13.1839 14.046 14.1944 14.046C15.2049 14.046 16.0271 14.8682 16.0271 15.8787ZM12.3617 3.58817C12.3617 2.5775 13.1839 1.75549 14.1944 1.75549C15.2049 1.75549 16.0271 2.5775 16.0271 3.58817C16.0271 4.59866 15.2049 5.42067 14.1944 5.42067C13.1839 5.42067 12.3617 4.59866 12.3617 3.58817ZM5.42085 9.73167C5.42085 10.7423 4.59866 11.5645 3.58817 11.5645C2.57767 11.5645 1.75549 10.7423 1.75549 9.73167C1.75549 8.72118 2.57767 7.899 3.58817 7.899C4.59866 7.899 5.42085 8.72118 5.42085 9.73167Z" fill="#363636"/></svg>
+          </button>
+          <!-- Heart icon -->
+          <button class="rate-icon-btn" type="button" onclick="toggleLike(this)" id="btn-like">
+            <svg width="23" height="20" viewBox="0 0 19.815 17.818" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.9189 1.97413C10.8196 1.00870 11.8797 0.347451 13.1919 0.0976563C16.0668 -0.449414 18.9448 1.38178 19.6164 4.21875C20.1 6.26232 19.5593 8.02509 18.1313 9.53784C15.7424 12.0685 13.3538 14.5992 10.9652 17.1304C10.8695 17.2314 10.7794 17.3381 10.6813 17.4364C10.1709 17.9469 9.61174 17.9484 9.10870 17.4204C7.67892 15.9201 6.25350 14.4154 4.83113 12.9079C3.65303 11.6591 2.43884 10.4413 1.31843 9.14232C-0.052124 7.55432 -0.356124 5.68843 0.322776 3.72607C1.00435 1.75584 2.43062 0.526855 4.48210 0.121289C6.41522 -0.261133 8.11230 0.263770 9.52673 1.65401C9.62594 1.75146 9.72583 1.84818 9.82673 1.94366C9.83660 1.95301 9.85484 1.95351 9.9189 1.97413ZM9.8933 15.3734C12.2521 12.8800 14.5922 10.4337 16.8973 7.95422C17.7272 7.06163 17.9925 5.94806 17.7082 4.76582C17.0443 2.00317 13.7700 1.05275 11.6927 3.00132C11.3319 3.33970 10.9955 3.70392 10.6397 4.04772C10.1497 4.52169 9.62110 4.52588 9.12940 4.05535C8.73830 3.68104 8.36850 3.28507 7.97673 2.91199C7.37203 2.33613 6.63200 2.03639 5.81233 1.97954C4.32120 1.87569 2.95831 2.69494 2.32272 4.03271C1.68263 5.37933 1.91390 6.90143 2.95283 8.02042C4.19413 9.35716 5.44773 10.6829 6.70020 12.0094C7.74933 13.1208 8.80430 14.2267 9.8933 15.3734Z" fill="#363636"/></svg>
+          </button>
+          <!-- Bookmark icon -->
+          <button class="rate-icon-btn" type="button" onclick="toggleBookmark(this)" id="btn-bookmark">
+            <svg width="16" height="21" viewBox="0 0 14.0245 18.4429" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.8465 0H2.17800C0.977203 0 0 0.976984 0 2.17778V16.5502C0 17.4223 0.672281 18.4360 1.53908 18.4360C2.43253 18.4360 2.91553 17.7787 3.04253 17.5761L6.98253 12.0266C6.99278 12.0130 7.00648 12.0097 7.01361 12.0088C7.01795 12.0083 7.02428 12.0085 7.03023 12.0106L10.9613 17.5476C11.2641 17.9782 11.9381 18.4429 12.4991 18.4429C13.4541 18.4429 14.0245 17.4955 14.0245 16.5793V2.17778C14.0245 0.976984 13.0473 0 11.8465 0ZM1.85320 2.17778C1.85320 1.99874 1.99880 1.85317 2.17780 1.85317H11.8465C12.0255 1.85317 12.1711 1.99874 12.1711 2.17778L12.1721 16.0508L8.48810 10.8637C8.03710 10.2119 7.53430 9.90787 7.01630 9.90787C6.29030 9.90787 5.70030 10.6101 5.47930 10.9138L1.85320 16.0503V2.17778Z" fill="#363636"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="p-section skills-section">
+        <h3>Skills</h3>
+        <div class="skills">
+          <span class="skill-pill">Carpentry</span>
+          <span class="skill-pill">Painting</span>
+          <span class="skill-pill">Plumbing</span>
+          <span class="skill-pill">Electrical</span>
+        </div>
+      </div>
+      <div class="p-section proj-section">
+        <h3>Project Done</h3>
+        <div class="proj-grid">
+          <div class="proj-thumb"><img src="assets/proj-tile.png" alt=""></div>
+          <div class="proj-thumb"><img src="assets/proj-paint.png" alt=""></div>
+          <div class="proj-thumb"><img src="assets/proj-electric.png" alt=""></div>
+          <div class="proj-thumb"><img src="assets/proj-plumb.png" alt=""></div>
+        </div>
+      </div>
+    </div>
+    <div class="profile-cta">
+      <button class="btn-orange" id="conn-req-btn" type="button" onclick="sendConnectionRequest(this)">SEND CONNECTION REQUEST</button>
+    </div>
+  </div>
+
+  <!-- ══ CHAT ══ -->
+  <div id="s-chat" class="screen">
+    <div class="chat-dark">
+      <div class="chat-hdr">
+        <button class="chat-back" onclick="show('s-home')" type="button">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h2>Chat</h2>
+      </div>
+      <div class="prev-lbl">Previous</div>
+      <div class="prev-row">
+        <div class="prev-contact" onclick="openConvo('Chris','assets/av-chris.png')"><div class="prev-av"><img src="assets/av-chris.png" alt="Chris"></div><span>Chris</span></div>
+        <div class="prev-contact" onclick="openConvo('Mike','assets/av-mike.png')"><div class="prev-av"><img src="assets/av-mike.png" alt="Mike"></div><span>Mike</span></div>
+        <div class="prev-contact" onclick="openConvo('Bob','assets/av-bob.png')"><div class="prev-av"><img src="assets/av-bob.png" alt="Bob"></div><span>Bob</span></div>
+        <div class="prev-contact" onclick="openConvo('Mark','assets/av-mark.png')"><div class="prev-av"><img src="assets/av-mark.png" alt="Mark"></div><span>Mark</span></div>
+        <div class="prev-contact" onclick="openConvo('Rocky','assets/av-rocky.png')"><div class="prev-av"><img src="assets/av-rocky.png" alt="Rocky"></div><span>Rocky</span></div>
+      </div>
+    </div>
+    <div class="chat-list">
+      <div class="chat-list-title">Recent Chat</div>
+      <div class="chat-item" onclick="openConvo('Vince Smith','assets/av-vince.png','Any update with the pipe repair?')">
+        <div class="chat-av"><img src="assets/av-vince.png" alt="Vince Smith"></div>
+        <div class="chat-info">
+          <div class="chat-cname">Vince Smith</div>
+          <div class="chat-msg">Any update with the pipe repair?</div>
+        </div>
+        <div class="chat-meta">
+          <span class="chat-time">00.21</span>
+          <span class="unread-dot">3</span>
+        </div>
+      </div>
+      <div class="chat-item" onclick="openConvo('Ricky Adam','assets/av-ricky.png','Your Welcome!')">
+        <div class="chat-av"><img src="assets/av-ricky.png" alt="Ricky Adam"></div>
+        <div class="chat-info">
+          <div class="chat-cname">Ricky Adam</div>
+          <div class="chat-msg">Your Welcome!</div>
+        </div>
+        <div class="chat-meta">
+          <span class="chat-time">00.10</span>
+          <img class="check-img" src="assets/check-green.svg" alt="read">
+        </div>
+      </div>
+      <div class="chat-item" onclick="openConvo('Martin Johnson','assets/av-martin.png','What are you doing?')">
+        <div class="chat-av"><img src="assets/av-martin.png" alt="Martin Johnson"></div>
+        <div class="chat-info">
+          <div class="chat-cname">Martin Johnson</div>
+          <div class="chat-msg">What are you doing?</div>
+        </div>
+        <div class="chat-meta">
+          <span class="chat-time">00.30</span>
+          <img class="check-img" src="assets/check-gray.svg" alt="sent">
+        </div>
+      </div>
+      <div class="chat-item" onclick="openConvo('Jason Gibbs','assets/av-jason.png','I\'m on my way to your house')">
+        <div class="chat-av"><img src="assets/av-jason.png" alt="Jason Gibbs"></div>
+        <div class="chat-info">
+          <div class="chat-cname">Jason Gibbs</div>
+          <div class="chat-msg">I'm on my way to your house</div>
+        </div>
+        <div class="chat-meta">
+          <span class="chat-time">00.20</span>
+          <span class="unread-dot">7</span>
+        </div>
+      </div>
+      <div class="chat-item" onclick="openConvo('Tim Jackson','assets/av-tim.png','Can you send me your address please')">
+        <div class="chat-av"><img src="assets/av-tim.png" alt="Tim Jackson"></div>
+        <div class="chat-info">
+          <div class="chat-cname">Tim Jackson</div>
+          <div class="chat-msg">Can you send me your address please</div>
+        </div>
+        <div class="chat-meta">
+          <span class="chat-time">00.12</span>
+          <img class="check-img" src="assets/check-green.svg" alt="read">
+        </div>
+      </div>
+      <div class="chat-item" onclick="openConvo('Robert Cue','assets/av-robert.png','Any update with the pipe repair?')">
+        <div class="chat-av"><img src="assets/av-robert.png" alt="Robert Cue"></div>
+        <div class="chat-info">
+          <div class="chat-cname">Robert Cue</div>
+          <div class="chat-msg">Any update with the pipe repair?</div>
+        </div>
+        <div class="chat-meta">
+          <span class="chat-time">00.21</span>
+          <img class="check-img" src="assets/check-gray.svg" alt="sent">
+        </div>
+      </div>
+    </div>
+    <!-- Bottom Nav -->
+    <div class="bnav">
+      <button class="bnav-btn" onclick="show('s-connect')" type="button">
+        <div class="bnav-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M8.18612 15.4256C7.70388 15.419 7.42424 14.9366 7.66294 14.4924C7.9281 13.999 8.21605 13.5181 8.49588 13.0328C8.91747 12.3013 9.33984 11.5701 9.76393 10.8399C9.89758 10.6097 10.1011 10.49 10.368 10.5137C10.6316 10.5371 10.8472 10.6684 10.8995 10.9341C10.9321 11.1 10.9236 11.3138 10.8441 11.4561C10.162 12.6742 9.4615 13.8822 8.76085 15.0898C8.63706 15.3034 8.45282 15.4426 8.18612 15.4256Z" fill="#373737"/><path d="M18.1853 14.6713C18.16 14.9791 17.9907 15.2026 17.6965 15.2909C17.42 15.3737 17.1477 15.2588 16.9787 14.9693C16.5357 14.2105 16.0986 13.4483 15.6591 12.6876C15.4793 12.376 15.2954 12.0667 15.1201 11.7524C14.9165 11.388 15.0009 11.0182 15.3219 10.8334C15.6454 10.6474 15.997 10.7596 16.2118 11.1298C16.829 12.1937 17.4433 13.2596 18.0542 14.3274C18.1145 14.4326 18.1425 14.5562 18.1853 14.6713Z" fill="#373737"/><path d="M12.8936 19.8974C12.5158 19.8974 12.1379 19.9061 11.7605 19.8946C11.4687 19.8857 11.2472 19.7482 11.146 19.4623C11.056 19.2084 11.1244 18.9521 11.3413 18.7885C11.4357 18.7175 11.5649 18.6555 11.6792 18.6539C12.493 18.6421 13.3071 18.6394 14.1209 18.6508C14.4446 18.6555 14.6636 18.8928 14.6875 19.2099C14.7122 19.5363 14.5203 19.8356 14.1997 19.8613C13.7669 19.8961 13.3293 19.87 12.8938 19.87Z" fill="#373737"/><path d="M18.1578 5.26986C18.1827 8.13619 15.8262 10.5087 12.9292 10.5342C10.0503 10.5595 7.6546 8.19819 7.64262 5.29515C7.63065 2.35833 9.93906 0.0618948 12.7882 0.00125399C15.8755 -0.064408 18.1988 2.45836 18.1578 5.26986ZM9.76119 7.71171C9.7946 7.66246 9.82647 7.61553 9.85833 7.5686C10.361 6.82392 11.0497 6.40774 11.9589 6.39692C12.6055 6.3892 13.2525 6.39596 13.8992 6.39692C14.3371 6.3975 14.7586 6.49754 15.1047 6.75884C15.4595 7.02651 15.7691 7.35424 16.0968 7.65435C17.2192 6.31929 17.2648 3.90969 15.693 2.38845C14.1325 0.878614 11.6295 0.88209 10.0924 2.40564C8.51767 3.96666 8.60805 6.35057 9.76119 7.71171ZM12.8842 7.65628V7.65821C12.5485 7.65821 12.2125 7.64894 11.877 7.66034C11.4217 7.67598 10.928 8.05238 10.8054 8.48266C10.7865 8.5489 10.8357 8.68331 10.8929 8.71518C12.2264 9.45812 13.5659 9.45967 14.9081 8.73005C15.0323 8.66246 15.0448 8.59119 14.9995 8.46701C14.832 8.00931 14.3855 7.67212 13.8913 7.65802C13.5559 7.64856 13.2198 7.65628 12.8842 7.65628Z" fill="#373737"/><path d="M12.9048 6.04654C11.7381 6.04654 10.792 5.10757 10.791 3.94883C10.7901 2.78005 11.7553 1.81521 12.916 1.82428C14.066 1.83336 15.0268 2.80149 15.0233 3.94768C15.0198 5.10796 14.0722 6.04674 12.9048 6.04654ZM12.9096 4.78602C13.3756 4.78487 13.7595 4.40828 13.764 3.94806C13.7682 3.48843 13.3609 3.08113 12.8982 3.08248C12.4471 3.08364 12.0533 3.48051 12.0517 3.93532C12.05 4.41967 12.4208 4.78738 12.9096 4.78602Z" fill="#373737"/><path d="M25.8164 20.5456C25.816 23.4602 23.4458 25.8146 20.514 25.8128C17.6328 25.8111 15.2493 23.4171 15.2866 20.4967C15.324 17.5574 17.6562 15.2857 20.5895 15.2774C23.4503 15.2692 25.8168 17.6655 25.8164 20.5456ZM23.6909 22.9984C24.9076 21.5371 24.9012 19.1288 23.2759 17.602C21.7 16.1215 19.1575 16.1905 17.6589 17.7687C16.1475 19.3602 16.2765 21.6678 17.4173 22.9942C17.992 22.0954 18.7141 21.6827 19.6612 21.6771C20.2157 21.6738 20.7703 21.6858 21.3246 21.6742C22.3667 21.6524 23.1424 22.0983 23.6909 22.9984ZM22.6892 23.9181C22.5271 23.3069 22.0803 22.9438 21.4754 22.9374C20.8626 22.9307 20.2496 22.931 19.6369 22.937C19.0225 22.943 18.5656 23.3154 18.4148 23.9187C19.6598 24.7599 21.4308 24.7636 22.6892 23.9181Z" fill="#373737"/><path d="M22.6583 19.238C22.6583 20.4703 21.6052 21.3581 20.5193 21.3323C19.3694 21.3048 18.4475 20.3879 18.4482 19.2231C18.449 18.0513 19.3868 17.1063 20.5444 17.1113C21.7269 17.1162 22.6616 18.0567 22.6583 19.238ZM20.5515 20.0683C21.0259 20.069 21.3999 19.7007 21.4019 19.2309C21.4036 18.761 21.0336 18.3815 20.5639 18.3713C20.0909 18.3609 19.7059 18.7475 19.7078 19.2309C19.7097 19.7108 20.0691 20.0673 20.5515 20.0683Z" fill="#373737"/><path d="M5.28618 25.8127C2.39628 25.8144 0.000772601 23.4542 1.07091e-07 20.6049C-0.000579263 17.6387 2.34973 15.2536 5.29313 15.2795C8.20408 15.3054 10.5117 17.6082 10.532 20.5365C10.5521 23.4332 8.1643 25.8111 5.28618 25.8127ZM2.12339 23.0006C2.68364 22.0827 3.47796 21.6422 4.5386 21.6733C5.10097 21.6897 5.66412 21.6783 6.22688 21.6773C6.76531 21.6765 7.25719 21.8363 7.66913 22.1732C7.95321 22.406 8.18902 22.698 8.44471 22.9618C9.69634 21.4199 9.5011 18.9716 7.99995 17.6095C6.40301 16.1605 3.99379 16.182 2.48782 17.6509C0.931628 19.1686 0.910577 21.524 2.12339 23.0006ZM7.41131 23.9133C7.21258 23.3258 6.802 22.9519 6.30838 22.9421C5.61198 22.9282 4.9148 22.927 4.2184 22.9425C3.69851 22.9542 3.21357 23.4143 3.14038 23.9255C4.38487 24.7626 6.14519 24.7607 7.41131 23.9133Z" fill="#373737"/><path d="M3.15727 19.2156C3.16519 18.0408 4.12192 17.0895 5.27371 17.1117C6.47185 17.1347 7.36369 18.0611 7.37103 19.2577C7.3776 20.3471 6.41218 21.3689 5.20496 21.3322C4.0777 21.298 3.14974 20.3639 3.15727 19.2156ZM5.27275 20.068C5.75092 20.0671 6.1109 19.7032 6.10897 19.2231C6.10723 18.7498 5.73933 18.3761 5.27043 18.3707C4.80597 18.3655 4.42281 18.7432 4.41644 19.2125C4.40968 19.6951 4.78395 20.069 5.27275 20.068Z" fill="#373737"/></svg></div>
+        <span class="bnav-lbl">Connect</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-home')" type="button">
+        <div class="bnav-icon"><svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><mask id="mask0_9785_1928" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="21" height="21"><path d="M0 0H20.412V20.4028H0V0Z" fill="black"/></mask><g mask="url(#mask0_9785_1928)"><path d="M14.8215 2.2925C14.8215 1.91294 14.8148 1.62452 14.8229 1.33651C14.8374 0.817159 15.158 0.484643 15.6275 0.490375C16.082 0.496027 16.404 0.819388 16.4108 1.31645C16.4222 2.16529 16.4138 3.01445 16.4144 3.86345C16.4145 4.19835 16.273 4.45461 15.9776 4.61103C15.6602 4.77908 15.3623 4.71237 15.0863 4.50221C14.1578 3.79515 13.23 3.08729 12.3009 2.3811C10.9254 1.33555 9.47493 1.33898 8.10156 2.38723C6.39393 3.69078 4.68845 4.99728 2.97564 6.29415C2.05285 6.99277 1.6002 7.90752 1.6045 9.0654C1.61278 11.2012 1.60538 13.3371 1.60729 15.4729C1.6092 17.4326 2.97588 18.7957 4.94016 18.7965C8.45565 18.7978 11.9713 18.7981 15.4867 18.7963C17.4242 18.7953 18.7983 17.4262 18.8009 15.494C18.8037 13.3449 18.7975 11.1957 18.8033 9.04661C18.8063 7.9888 18.433 7.11059 17.6221 6.42064C17.2036 6.06464 17.1368 5.5956 17.4359 5.23562C17.7418 4.86752 18.2084 4.84364 18.6332 5.19502C19.7369 6.10811 20.3545 7.29296 20.3804 8.71616C20.4233 11.0767 20.4201 13.439 20.385 15.7999C20.3483 18.263 18.2406 20.3629 15.7759 20.3816C12.0617 20.4097 8.34683 20.4099 4.63256 20.3815C2.15132 20.3626 0.0496345 18.2439 0.0208171 15.7597C-0.00616944 13.4385 -0.00855763 11.1163 0.0233645 8.79521C0.043664 7.32059 0.662762 6.08908 1.82461 5.18077C3.66344 3.74348 5.51834 2.32594 7.39164 0.933941C9.08335 -0.323121 11.3258 -0.301866 13.0339 0.941265C13.6113 1.36159 14.174 1.80213 14.8215 2.2925Z" fill="#373737"/><path d="M8.59833 11.1804C8.03496 11.174 7.62594 10.7603 7.62403 10.1949C7.6222 9.64952 8.05828 9.21129 8.60605 9.20803C9.16942 9.20468 9.61706 9.66171 9.59986 10.2225C9.5825 10.788 9.16537 11.1869 8.59833 11.1804Z" fill="#373737"/><path d="M12.7829 10.1861C12.79 10.7485 12.381 11.1703 11.8187 11.1804C11.2512 11.1907 10.8267 10.7916 10.8091 10.2315C10.7912 9.65485 11.2149 9.21742 11.7931 9.21582C12.3563 9.21431 12.7759 9.62556 12.7829 10.1861Z" fill="#373737"/><path d="M8.59534 12.4005C9.15959 12.3922 9.58453 12.7973 9.59886 13.3571C9.61319 13.9196 9.20855 14.3486 8.64829 14.365C8.06406 14.3821 7.62869 13.9673 7.62502 13.3902C7.62144 12.8289 8.03333 12.4088 8.59534 12.4005Z" fill="#373737"/><path d="M12.7835 13.3836C12.7835 13.9454 12.3702 14.3606 11.8065 14.365C11.2244 14.3697 10.7985 13.9416 10.8098 13.3635C10.8207 12.8028 11.2425 12.3954 11.8067 12.4004C12.369 12.4054 12.7835 12.8227 12.7835 13.3836Z" fill="#373737"/></g></svg></div>
+        <span class="bnav-lbl">Home</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-contract')" type="button">
+        <div class="bnav-icon"><svg width="22" height="24" viewBox="0 0 21 24" fill="none"><path d="M0.00150617 11.5657C0.00150617 8.96593 0.00460579 6.36622 8.01672e-06 3.76646C-0.00185176 2.72938 0.319786 1.82362 1.05362 1.08043C1.73781 0.387616 2.57647 0.0122 3.54541 0.00879037C7.29864 -0.00448635 11.0519 -9.52207e-05 14.8052 0.0049675C16.4908 0.00729222 18.0082 1.30836 18.2757 2.9694C18.3164 3.22264 18.3424 3.48125 18.3432 3.73748C18.349 5.5022 18.3476 7.26692 18.3455 9.03169C18.3448 9.60011 18.1235 9.92346 17.6623 10.05C17.1759 10.1835 16.6615 9.86446 16.5728 9.36666C16.5474 9.22366 16.5382 9.07602 16.5379 8.93049C16.5357 7.2088 16.5338 5.48712 16.538 3.76548C16.54 2.97477 16.2434 2.35319 15.5124 2.00794C15.2641 1.89068 14.9683 1.82031 14.694 1.81938C11.0182 1.8073 7.34245 1.809 3.66666 1.81277C2.66925 1.8138 1.80135 2.54098 1.80642 3.78439C1.81902 6.89197 1.81065 9.99965 1.81065 13.1073C1.81065 15.1905 1.81277 17.2737 1.80926 19.357C1.80817 20.0037 2.00247 20.5552 2.53039 20.9617C2.87171 21.2245 3.26376 21.333 3.68613 21.335C4.64164 21.3396 5.59715 21.3359 6.55272 21.3366C7.13436 21.3371 7.53571 21.7005 7.54015 22.2286C7.5447 22.7721 7.14392 23.1437 6.5505 23.1442C5.62081 23.1448 4.69113 23.1443 3.76145 23.1443C1.5725 23.1443 0.00662055 21.5854 0.0026427 19.3907C-0.00211006 16.7824 0.00150617 14.174 0.00150617 11.5657ZM18.0804 12.291C19.197 12.3596 20.0744 12.8805 20.5235 13.9604C20.952 14.9906 20.8114 15.9972 20.0347 16.8155C18.8856 18.0262 17.6833 19.1866 16.5033 20.368C16.047 20.8248 15.5987 21.2901 15.128 21.7314C14.958 21.8908 14.7487 22.0457 14.5302 22.1094C13.336 22.4577 12.1359 22.7865 10.9328 23.1025C10.2695 23.2768 9.68556 22.7228 9.83928 22.0548C9.97173 21.4791 10.1622 20.9164 10.3333 20.3498C10.5116 19.7588 10.6844 19.1654 10.8866 18.5823C10.9628 18.3623 11.0764 18.1309 11.2374 17.9684C12.8608 16.3299 14.4961 14.7032 16.1314 13.0764C16.6572 12.5534 17.3068 12.3204 18.0804 12.291ZM15.9176 15.8513C15.866 15.9002 15.8035 15.9569 15.7438 16.0164C15.0072 16.7505 14.297 17.5137 13.5268 18.2106C12.8635 18.8108 12.362 19.4727 12.2236 20.3761C12.1965 20.553 12.1158 20.7219 12.0468 20.9342C12.6304 20.7701 13.1588 20.6286 13.6817 20.4695C13.8141 20.4292 13.9499 20.354 14.0489 20.2584C14.5186 19.8049 14.9758 19.3385 15.438 18.8773C16.0264 18.2902 16.6153 17.7037 17.1909 17.1301C16.7635 16.7009 16.3531 16.2888 15.9176 15.8513ZM18.513 15.7962C18.8319 15.5417 18.9964 15.2195 18.9013 14.7941C18.8168 14.4159 18.5584 14.202 18.1989 14.1258C17.794 14.04 17.4893 14.2323 17.2441 14.5312C17.6685 14.9543 18.0855 15.37 18.513 15.7962ZM9.17573 7.23486C7.62674 7.23486 6.07776 7.23714 4.52877 7.23352C4.08008 7.23242 3.73148 6.94277 3.64248 6.51807C3.55331 6.09234 3.74746 5.68839 4.14173 5.52072C4.27195 5.46534 4.42212 5.43103 4.56328 5.43082C7.63541 5.42587 10.7075 5.42633 13.7797 5.42762C14.3326 5.42788 14.7265 5.81027 14.7244 6.3353C14.7223 6.8596 14.3284 7.23382 13.771 7.23445C12.2392 7.23583 10.7075 7.23486 9.17573 7.23486ZM9.17478 10.8511C7.63442 10.8511 6.09401 10.8525 4.55365 10.8502C4.08525 10.8495 3.73298 10.5675 3.64231 10.1333C3.55345 9.70773 3.7482 9.30369 4.14259 9.13653C4.27292 9.08128 4.42305 9.04726 4.56424 9.04699C7.63639 9.04203 10.7085 9.04256 13.7807 9.04385C14.3331 9.04403 14.7269 9.42725 14.7243 9.95245C14.7218 10.4767 14.328 10.8501 13.7701 10.8506C12.2383 10.852 10.7066 10.8511 9.17478 10.8511ZM7.33234 14.4664C6.42054 14.4664 5.50879 14.4673 4.59698 14.4661C4.0221 14.4653 3.61615 14.0898 3.61621 13.5624C3.61626 13.0351 4.02216 12.6592 4.59709 12.6589C6.42928 12.6579 8.26141 12.658 10.0936 12.6589C10.6694 12.6591 11.0754 13.0347 11.0754 13.5625C11.0754 14.0904 10.6693 14.4654 10.0935 14.4661C9.17312 14.4672 8.25273 14.4664 7.33234 14.4664Z" fill="#373737"/></svg></div>
+        <span class="bnav-lbl">Contract</span>
+      </button>
+      <button class="bnav-btn active" type="button">
+        <div class="bnav-icon"><img src="assets/nav-chat-active.svg" alt="Chat"></div>
+        <span class="bnav-lbl">Chat</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ CONTRACT ══ -->
+  <div id="s-contract" class="screen">
+    <div class="contract-hdr"><h2>Contracts</h2></div>
+    <div class="contract-body">
+      <div class="contract-card">
+        <div class="c-job">Pipe Repair – Kitchen</div>
+        <div class="c-who">Vince Smith · Plumber</div>
+        <div class="c-foot"><span class="c-badge active">Active</span><span class="c-date">Mar 28, 2026</span></div>
+      </div>
+      <div class="contract-card">
+        <div class="c-job">Wall Painting – Living Room</div>
+        <div class="c-who">John Anderson · Painter</div>
+        <div class="c-foot"><span class="c-badge pending">Pending</span><span class="c-date">Mar 30, 2026</span></div>
+      </div>
+      <div class="contract-card">
+        <div class="c-job">Electrical Wiring – Bedroom</div>
+        <div class="c-who">Dave Kim · Electrician</div>
+        <div class="c-foot"><span class="c-badge done">Completed</span><span class="c-date">Mar 20, 2026</span></div>
+      </div>
+    </div>
+    <div class="bnav">
+      <button class="bnav-btn" onclick="show('s-connect')" type="button">
+        <div class="bnav-icon"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M8.18612 15.4256C7.70388 15.419 7.42424 14.9366 7.66294 14.4924C7.9281 13.999 8.21605 13.5181 8.49588 13.0328C8.91747 12.3013 9.33984 11.5701 9.76393 10.8399C9.89758 10.6097 10.1011 10.49 10.368 10.5137C10.6316 10.5371 10.8472 10.6684 10.8995 10.9341C10.9321 11.1 10.9236 11.3138 10.8441 11.4561C10.162 12.6742 9.4615 13.8822 8.76085 15.0898C8.63706 15.3034 8.45282 15.4426 8.18612 15.4256Z" fill="#373737"/><path d="M18.1853 14.6713C18.16 14.9791 17.9907 15.2026 17.6965 15.2909C17.42 15.3737 17.1477 15.2588 16.9787 14.9693C16.5357 14.2105 16.0986 13.4483 15.6591 12.6876C15.4793 12.376 15.2954 12.0667 15.1201 11.7524C14.9165 11.388 15.0009 11.0182 15.3219 10.8334C15.6454 10.6474 15.997 10.7596 16.2118 11.1298C16.829 12.1937 17.4433 13.2596 18.0542 14.3274C18.1145 14.4326 18.1425 14.5562 18.1853 14.6713Z" fill="#373737"/><path d="M12.8936 19.8974C12.5158 19.8974 12.1379 19.9061 11.7605 19.8946C11.4687 19.8857 11.2472 19.7482 11.146 19.4623C11.056 19.2084 11.1244 18.9521 11.3413 18.7885C11.4357 18.7175 11.5649 18.6555 11.6792 18.6539C12.493 18.6421 13.3071 18.6394 14.1209 18.6508C14.4446 18.6555 14.6636 18.8928 14.6875 19.2099C14.7122 19.5363 14.5203 19.8356 14.1997 19.8613C13.7669 19.8961 13.3293 19.87 12.8938 19.87Z" fill="#373737"/><path d="M18.1578 5.26986C18.1827 8.13619 15.8262 10.5087 12.9292 10.5342C10.0503 10.5595 7.6546 8.19819 7.64262 5.29515C7.63065 2.35833 9.93906 0.0618948 12.7882 0.00125399C15.8755 -0.064408 18.1988 2.45836 18.1578 5.26986ZM9.76119 7.71171C9.7946 7.66246 9.82647 7.61553 9.85833 7.5686C10.361 6.82392 11.0497 6.40774 11.9589 6.39692C12.6055 6.3892 13.2525 6.39596 13.8992 6.39692C14.3371 6.3975 14.7586 6.49754 15.1047 6.75884C15.4595 7.02651 15.7691 7.35424 16.0968 7.65435C17.2192 6.31929 17.2648 3.90969 15.693 2.38845C14.1325 0.878614 11.6295 0.88209 10.0924 2.40564C8.51767 3.96666 8.60805 6.35057 9.76119 7.71171ZM12.8842 7.65628V7.65821C12.5485 7.65821 12.2125 7.64894 11.877 7.66034C11.4217 7.67598 10.928 8.05238 10.8054 8.48266C10.7865 8.5489 10.8357 8.68331 10.8929 8.71518C12.2264 9.45812 13.5659 9.45967 14.9081 8.73005C15.0323 8.66246 15.0448 8.59119 14.9995 8.46701C14.832 8.00931 14.3855 7.67212 13.8913 7.65802C13.5559 7.64856 13.2198 7.65628 12.8842 7.65628Z" fill="#373737"/><path d="M12.9048 6.04654C11.7381 6.04654 10.792 5.10757 10.791 3.94883C10.7901 2.78005 11.7553 1.81521 12.916 1.82428C14.066 1.83336 15.0268 2.80149 15.0233 3.94768C15.0198 5.10796 14.0722 6.04674 12.9048 6.04654ZM12.9096 4.78602C13.3756 4.78487 13.7595 4.40828 13.764 3.94806C13.7682 3.48843 13.3609 3.08113 12.8982 3.08248C12.4471 3.08364 12.0533 3.48051 12.0517 3.93532C12.05 4.41967 12.4208 4.78738 12.9096 4.78602Z" fill="#373737"/><path d="M25.8164 20.5456C25.816 23.4602 23.4458 25.8146 20.514 25.8128C17.6328 25.8111 15.2493 23.4171 15.2866 20.4967C15.324 17.5574 17.6562 15.2857 20.5895 15.2774C23.4503 15.2692 25.8168 17.6655 25.8164 20.5456ZM23.6909 22.9984C24.9076 21.5371 24.9012 19.1288 23.2759 17.602C21.7 16.1215 19.1575 16.1905 17.6589 17.7687C16.1475 19.3602 16.2765 21.6678 17.4173 22.9942C17.992 22.0954 18.7141 21.6827 19.6612 21.6771C20.2157 21.6738 20.7703 21.6858 21.3246 21.6742C22.3667 21.6524 23.1424 22.0983 23.6909 22.9984ZM22.6892 23.9181C22.5271 23.3069 22.0803 22.9438 21.4754 22.9374C20.8626 22.9307 20.2496 22.931 19.6369 22.937C19.0225 22.943 18.5656 23.3154 18.4148 23.9187C19.6598 24.7599 21.4308 24.7636 22.6892 23.9181Z" fill="#373737"/><path d="M22.6583 19.238C22.6583 20.4703 21.6052 21.3581 20.5193 21.3323C19.3694 21.3048 18.4475 20.3879 18.4482 19.2231C18.449 18.0513 19.3868 17.1063 20.5444 17.1113C21.7269 17.1162 22.6616 18.0567 22.6583 19.238ZM20.5515 20.0683C21.0259 20.069 21.3999 19.7007 21.4019 19.2309C21.4036 18.761 21.0336 18.3815 20.5639 18.3713C20.0909 18.3609 19.7059 18.7475 19.7078 19.2309C19.7097 19.7108 20.0691 20.0673 20.5515 20.0683Z" fill="#373737"/><path d="M5.28618 25.8127C2.39628 25.8144 0.000772601 23.4542 1.07091e-07 20.6049C-0.000579263 17.6387 2.34973 15.2536 5.29313 15.2795C8.20408 15.3054 10.5117 17.6082 10.532 20.5365C10.5521 23.4332 8.1643 25.8111 5.28618 25.8127ZM2.12339 23.0006C2.68364 22.0827 3.47796 21.6422 4.5386 21.6733C5.10097 21.6897 5.66412 21.6783 6.22688 21.6773C6.76531 21.6765 7.25719 21.8363 7.66913 22.1732C7.95321 22.406 8.18902 22.698 8.44471 22.9618C9.69634 21.4199 9.5011 18.9716 7.99995 17.6095C6.40301 16.1605 3.99379 16.182 2.48782 17.6509C0.931628 19.1686 0.910577 21.524 2.12339 23.0006ZM7.41131 23.9133C7.21258 23.3258 6.802 22.9519 6.30838 22.9421C5.61198 22.9282 4.9148 22.927 4.2184 22.9425C3.69851 22.9542 3.21357 23.4143 3.14038 23.9255C4.38487 24.7626 6.14519 24.7607 7.41131 23.9133Z" fill="#373737"/><path d="M3.15727 19.2156C3.16519 18.0408 4.12192 17.0895 5.27371 17.1117C6.47185 17.1347 7.36369 18.0611 7.37103 19.2577C7.3776 20.3471 6.41218 21.3689 5.20496 21.3322C4.0777 21.298 3.14974 20.3639 3.15727 19.2156ZM5.27275 20.068C5.75092 20.0671 6.1109 19.7032 6.10897 19.2231C6.10723 18.7498 5.73933 18.3761 5.27043 18.3707C4.80597 18.3655 4.42281 18.7432 4.41644 19.2125C4.40968 19.6951 4.78395 20.069 5.27275 20.068Z" fill="#373737"/></svg></div>
+        <span class="bnav-lbl">Connect</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-home')" type="button">
+        <div class="bnav-icon"><svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><mask id="mask0_9785_1928" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="21" height="21"><path d="M0 0H20.412V20.4028H0V0Z" fill="black"/></mask><g mask="url(#mask0_9785_1928)"><path d="M14.8215 2.2925C14.8215 1.91294 14.8148 1.62452 14.8229 1.33651C14.8374 0.817159 15.158 0.484643 15.6275 0.490375C16.082 0.496027 16.404 0.819388 16.4108 1.31645C16.4222 2.16529 16.4138 3.01445 16.4144 3.86345C16.4145 4.19835 16.273 4.45461 15.9776 4.61103C15.6602 4.77908 15.3623 4.71237 15.0863 4.50221C14.1578 3.79515 13.23 3.08729 12.3009 2.3811C10.9254 1.33555 9.47493 1.33898 8.10156 2.38723C6.39393 3.69078 4.68845 4.99728 2.97564 6.29415C2.05285 6.99277 1.6002 7.90752 1.6045 9.0654C1.61278 11.2012 1.60538 13.3371 1.60729 15.4729C1.6092 17.4326 2.97588 18.7957 4.94016 18.7965C8.45565 18.7978 11.9713 18.7981 15.4867 18.7963C17.4242 18.7953 18.7983 17.4262 18.8009 15.494C18.8037 13.3449 18.7975 11.1957 18.8033 9.04661C18.8063 7.9888 18.433 7.11059 17.6221 6.42064C17.2036 6.06464 17.1368 5.5956 17.4359 5.23562C17.7418 4.86752 18.2084 4.84364 18.6332 5.19502C19.7369 6.10811 20.3545 7.29296 20.3804 8.71616C20.4233 11.0767 20.4201 13.439 20.385 15.7999C20.3483 18.263 18.2406 20.3629 15.7759 20.3816C12.0617 20.4097 8.34683 20.4099 4.63256 20.3815C2.15132 20.3626 0.0496345 18.2439 0.0208171 15.7597C-0.00616944 13.4385 -0.00855763 11.1163 0.0233645 8.79521C0.043664 7.32059 0.662762 6.08908 1.82461 5.18077C3.66344 3.74348 5.51834 2.32594 7.39164 0.933941C9.08335 -0.323121 11.3258 -0.301866 13.0339 0.941265C13.6113 1.36159 14.174 1.80213 14.8215 2.2925Z" fill="#373737"/><path d="M8.59833 11.1804C8.03496 11.174 7.62594 10.7603 7.62403 10.1949C7.6222 9.64952 8.05828 9.21129 8.60605 9.20803C9.16942 9.20468 9.61706 9.66171 9.59986 10.2225C9.5825 10.788 9.16537 11.1869 8.59833 11.1804Z" fill="#373737"/><path d="M12.7829 10.1861C12.79 10.7485 12.381 11.1703 11.8187 11.1804C11.2512 11.1907 10.8267 10.7916 10.8091 10.2315C10.7912 9.65485 11.2149 9.21742 11.7931 9.21582C12.3563 9.21431 12.7759 9.62556 12.7829 10.1861Z" fill="#373737"/><path d="M8.59534 12.4005C9.15959 12.3922 9.58453 12.7973 9.59886 13.3571C9.61319 13.9196 9.20855 14.3486 8.64829 14.365C8.06406 14.3821 7.62869 13.9673 7.62502 13.3902C7.62144 12.8289 8.03333 12.4088 8.59534 12.4005Z" fill="#373737"/><path d="M12.7835 13.3836C12.7835 13.9454 12.3702 14.3606 11.8065 14.365C11.2244 14.3697 10.7985 13.9416 10.8098 13.3635C10.8207 12.8028 11.2425 12.3954 11.8067 12.4004C12.369 12.4054 12.7835 12.8227 12.7835 13.3836Z" fill="#373737"/></g></svg></div>
+        <span class="bnav-lbl">Home</span>
+      </button>
+      <button class="bnav-btn active" type="button">
+        <div class="bnav-icon"><img src="assets/nav-contract-active.png" alt="Contract"></div>
+        <span class="bnav-lbl">Contract</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-chat')" type="button">
+        <div class="bnav-icon"><svg width="24" height="24" viewBox="0 0 23 23" fill="none"><path d="M20.3761 16.9967C20.0383 16.16 19.7021 15.3533 19.3903 14.5372C19.3141 14.3375 19.2654 14.0994 19.2962 13.8927C19.3568 13.488 19.707 13.2104 20.1038 13.1782C20.4819 13.1475 20.8479 13.3824 21.0098 13.7776C21.3361 14.5739 21.6553 15.3731 21.9768 16.1714C22.2707 16.9008 22.5566 17.6335 22.8592 18.3593C23.141 19.0351 22.5984 19.6821 21.981 19.6219C21.8092 19.6051 21.6389 19.5282 21.4773 19.4575C19.9948 18.8087 18.5152 18.1535 17.0315 17.5074C16.9417 17.4683 16.8181 17.4646 16.7219 17.4895C16.1918 17.6272 15.6643 17.7757 15.1386 17.9297C15.0625 17.9521 14.9787 18.0097 14.9358 18.0754C13.8157 19.7935 12.2442 20.8885 10.2808 21.428C8.58372 21.8944 6.89562 21.8322 5.22879 21.266C5.09365 21.2201 4.98464 21.224 4.85335 21.2826C3.6739 21.8087 2.49292 22.3315 1.3084 22.8462C0.735761 23.0949 0.169264 22.8361 0.0397272 22.2445C-0.00427338 22.0436 0.0420572 21.7976 0.118543 21.5998C0.495819 20.6242 0.894243 19.6567 1.29276 18.6895C1.35594 18.5362 1.34702 18.4255 1.24916 18.2842C0.360636 17.0006 -0.0611784 15.5715 0.00715243 14.0145C0.0729292 12.5161 0.591795 11.1738 1.51097 9.98674C1.99466 9.36209 2.57137 8.83807 3.21171 8.3787C3.2834 8.32731 3.34851 8.22439 3.36002 8.13782C3.52146 6.924 3.88306 5.78065 4.5156 4.72621C5.265 3.47703 6.25147 2.45843 7.47139 1.66593C8.72218 0.853353 10.085 0.343672 11.564 0.128598C12.4184 0.00434819 13.2754 -0.0480761 14.1282 0.0541737C17.7088 0.483515 20.4701 2.16342 22.1215 5.44362C22.8002 6.79177 23.0466 8.2459 22.9022 9.75688C22.8823 9.96429 22.8774 10.1751 22.835 10.378C22.7343 10.8602 22.2844 11.1826 21.8381 11.1113C21.3304 11.0302 20.9924 10.5776 21.0675 10.0553C21.3317 8.21726 20.8929 6.55241 19.8109 5.0598C18.9792 3.9126 17.8866 3.07829 16.5882 2.51426C15.1933 1.90829 13.7324 1.68116 12.226 1.84655C10.1066 2.07914 8.28903 2.94325 6.8556 4.55124C6.05217 5.45253 5.50996 6.49515 5.25913 7.6742C4.89001 9.40913 5.21441 11.034 6.1485 12.5294C7.38213 14.5042 9.1797 15.6882 11.4418 16.1592C12.4768 16.3747 13.5337 16.4068 14.5749 16.1861C15.2109 16.0513 15.8372 15.8616 16.4561 15.6605C16.79 15.5521 17.0862 15.5596 17.4017 15.7022C18.3553 16.1334 19.3139 16.5531 20.271 16.9766C20.2907 16.9853 20.3142 16.9853 20.3761 16.9967ZM2.55627 20.3386C3.24881 20.0321 3.88736 19.7533 4.52241 19.4668C4.8305 19.3278 5.12488 19.3338 5.45036 19.435C6.02215 19.6128 6.60034 19.8071 7.19013 19.8828C8.77886 20.0869 10.2684 19.7477 11.6255 18.889C11.9664 18.6733 12.2722 18.4023 12.5941 18.1567L12.5702 18.1008C10.3839 17.9662 8.41301 17.2618 6.70962 15.8748C4.99942 14.4823 3.90273 12.7063 3.44986 10.5209C3.39936 10.5667 3.36589 10.5946 3.33524 10.6252C1.43865 12.5209 1.27475 15.5078 2.96693 17.5916C3.29532 17.996 3.36549 18.3943 3.15118 18.8697C2.94188 19.334 2.767 19.8139 2.55627 20.3386ZM10.3957 9.08974C10.4001 9.57995 9.99775 9.99085 9.50904 9.99529C9.01888 9.99975 8.60792 9.59739 8.60355 9.10869C8.59908 8.61883 9.00173 8.20754 9.4901 8.20316C9.98029 8.19869 10.3912 8.6011 10.3957 9.08974ZM13.0797 8.20313C13.5683 8.20128 13.9778 8.60714 13.9796 9.09527C13.9814 9.58399 13.5756 9.99346 13.0875 9.99526C12.5988 9.99712 12.1893 9.59116 12.1875 9.10311C12.1857 8.61442 12.5915 8.20496 13.0797 8.20313ZM16.6561 9.99437C16.1687 9.98863 15.7668 9.57535 15.7725 9.08582C15.7782 8.5984 16.1916 8.19643 16.6811 8.20221C17.1685 8.20798 17.5704 8.62126 17.5646 9.11078C17.5589 9.59819 17.1456 10.0002 16.6561 9.99437Z" fill="#373737"/></svg></div>
+        <span class="bnav-lbl">Chat</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ CONNECT ══ -->
+  <div id="s-connect" class="screen">
+    <div class="conn-hdr">
+      <h2>Connect</h2>
+      <button class="conn-filter-btn" onclick="showToast('Filter coming soon')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6H20M7 12H17M10 18H14" stroke="#373737" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="conn-search">
+      <div class="conn-search-row">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#bbb" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="#bbb" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="Search professionals...">
+      </div>
+    </div>
+    <div class="conn-tabs">
+      <div class="conn-tab active" onclick="switchConnTab(this)">Suggested</div>
+      <div class="conn-tab" onclick="switchConnTab(this)">Near You</div>
+      <div class="conn-tab" onclick="switchConnTab(this)">Following</div>
+    </div>
+    <div class="conn-list">
+      <div class="conn-card">
+        <div class="conn-av"><img src="assets/av-vince.png" alt="Vince Smith"></div>
+        <div class="conn-info">
+          <div class="conn-name">Vince Smith</div>
+          <div class="conn-role">Plumber · 2.4 km away</div>
+          <div class="conn-rating">
+            <svg viewBox="0 0 24 24" fill="#FF6A00"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>4.9 <span class="conn-reviews">(128)</span></span>
+          </div>
+        </div>
+        <button class="conn-btn connected" onclick="toggleConnect(this)">Connected</button>
+      </div>
+      <div class="conn-card">
+        <div class="conn-av"><img src="assets/av-jason.png" alt="Jason Gibbs"></div>
+        <div class="conn-info">
+          <div class="conn-name">Jason Gibbs</div>
+          <div class="conn-role">Electrician · 1.1 km away</div>
+          <div class="conn-rating">
+            <svg viewBox="0 0 24 24" fill="#FF6A00"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>4.7 <span class="conn-reviews">(94)</span></span>
+          </div>
+        </div>
+        <button class="conn-btn add" onclick="toggleConnect(this)">Connect</button>
+      </div>
+      <div class="conn-card">
+        <div class="conn-av"><img src="assets/av-ricky.png" alt="Ricky Adam"></div>
+        <div class="conn-info">
+          <div class="conn-name">Ricky Adam</div>
+          <div class="conn-role">Carpenter · 3.8 km away</div>
+          <div class="conn-rating">
+            <svg viewBox="0 0 24 24" fill="#FF6A00"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>4.8 <span class="conn-reviews">(210)</span></span>
+          </div>
+        </div>
+        <button class="conn-btn pending" onclick="toggleConnect(this)">Pending</button>
+      </div>
+      <div class="conn-card">
+        <div class="conn-av"><img src="assets/av-martin.png" alt="Martin Johnson"></div>
+        <div class="conn-info">
+          <div class="conn-name">Martin Johnson</div>
+          <div class="conn-role">Painter · 0.8 km away</div>
+          <div class="conn-rating">
+            <svg viewBox="0 0 24 24" fill="#FF6A00"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>4.6 <span class="conn-reviews">(76)</span></span>
+          </div>
+        </div>
+        <button class="conn-btn add" onclick="toggleConnect(this)">Connect</button>
+      </div>
+      <div class="conn-card">
+        <div class="conn-av"><img src="assets/av-tim.png" alt="Tim Jackson"></div>
+        <div class="conn-info">
+          <div class="conn-name">Tim Jackson</div>
+          <div class="conn-role">Welder · 5.2 km away</div>
+          <div class="conn-rating">
+            <svg viewBox="0 0 24 24" fill="#FF6A00"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>4.5 <span class="conn-reviews">(53)</span></span>
+          </div>
+        </div>
+        <button class="conn-btn add" onclick="toggleConnect(this)">Connect</button>
+      </div>
+      <div class="conn-card">
+        <div class="conn-av"><img src="assets/av-robert.png" alt="Robert Cue"></div>
+        <div class="conn-info">
+          <div class="conn-name">Robert Cue</div>
+          <div class="conn-role">Tiler · 2.0 km away</div>
+          <div class="conn-rating">
+            <svg viewBox="0 0 24 24" fill="#FF6A00"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span>4.8 <span class="conn-reviews">(189)</span></span>
+          </div>
+        </div>
+        <button class="conn-btn add" onclick="toggleConnect(this)">Connect</button>
+      </div>
+    </div>
+    <!-- Bottom Nav -->
+    <div class="bnav">
+      <button class="bnav-btn active" type="button">
+        <div class="bnav-icon"><img src="assets/nav-connect-active.png" alt="Connect"></div>
+        <span class="bnav-lbl">Connect</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-home')" type="button">
+        <div class="bnav-icon"><svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><mask id="mask0_conn_home" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="21" height="21"><path d="M0 0H20.412V20.4028H0V0Z" fill="black"/></mask><g mask="url(#mask0_conn_home)"><path d="M14.8215 2.2925C14.8215 1.91294 14.8148 1.62452 14.8229 1.33651C14.8374 0.817159 15.158 0.484643 15.6275 0.490375C16.082 0.496027 16.404 0.819388 16.4108 1.31645C16.4222 2.16529 16.4138 3.01445 16.4144 3.86345C16.4145 4.19835 16.273 4.45461 15.9776 4.61103C15.6602 4.77908 15.3623 4.71237 15.0863 4.50221C14.1578 3.79515 13.23 3.08729 12.3009 2.3811C10.9254 1.33555 9.47493 1.33898 8.10156 2.38723C6.39393 3.69078 4.68845 4.99728 2.97564 6.29415C2.05285 6.99277 1.6002 7.90752 1.6045 9.0654C1.61278 11.2012 1.60538 13.3371 1.60729 15.4729C1.6092 17.4326 2.97588 18.7957 4.94016 18.7965C8.45565 18.7978 11.9713 18.7981 15.4867 18.7963C17.4242 18.7953 18.7983 17.4262 18.8009 15.494C18.8037 13.3449 18.7975 11.1957 18.8033 9.04661C18.8063 7.9888 18.433 7.11059 17.6221 6.42064C17.2036 6.06464 17.1368 5.5956 17.4359 5.23562C17.7418 4.86752 18.2084 4.84364 18.6332 5.19502C19.7369 6.10811 20.3545 7.29296 20.3804 8.71616C20.4233 11.0767 20.4201 13.439 20.385 15.7999C20.3483 18.263 18.2406 20.3629 15.7759 20.3816C12.0617 20.4097 8.34683 20.4099 4.63256 20.3815C2.15132 20.3626 0.0496345 18.2439 0.0208171 15.7597C-0.00616944 13.4385 -0.00855763 11.1163 0.0233645 8.79521C0.043664 7.32059 0.662762 6.08908 1.82461 5.18077C3.66344 3.74348 5.51834 2.32594 7.39164 0.933941C9.08335 -0.323121 11.3258 -0.301866 13.0339 0.941265C13.6113 1.36159 14.174 1.80213 14.8215 2.2925Z" fill="#373737"/><path d="M8.59833 11.1804C8.03496 11.174 7.62594 10.7603 7.62403 10.1949C7.6222 9.64952 8.05828 9.21129 8.60605 9.20803C9.16942 9.20468 9.61706 9.66171 9.59986 10.2225C9.5825 10.788 9.16537 11.1869 8.59833 11.1804Z" fill="#373737"/><path d="M12.7829 10.1861C12.79 10.7485 12.381 11.1703 11.8187 11.1804C11.2512 11.1907 10.8267 10.7916 10.8091 10.2315C10.7912 9.65485 11.2149 9.21742 11.7931 9.21582C12.3563 9.21431 12.7759 9.62556 12.7829 10.1861Z" fill="#373737"/><path d="M8.59534 12.4005C9.15959 12.3922 9.58453 12.7973 9.59886 13.3571C9.61319 13.9196 9.20855 14.3486 8.64829 14.365C8.06406 14.3821 7.62869 13.9673 7.62502 13.3902C7.62144 12.8289 8.03333 12.4088 8.59534 12.4005Z" fill="#373737"/><path d="M12.7835 13.3836C12.7835 13.9454 12.3702 14.3606 11.8065 14.365C11.2244 14.3697 10.7985 13.9416 10.8098 13.3635C10.8207 12.8028 11.2425 12.3954 11.8067 12.4004C12.369 12.4054 12.7835 12.8227 12.7835 13.3836Z" fill="#373737"/></g></svg></div>
+        <span class="bnav-lbl">Home</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-contract')" type="button">
+        <div class="bnav-icon"><svg width="22" height="24" viewBox="0 0 21 24" fill="none"><path d="M0.00150617 11.5657C0.00150617 8.96593 0.00460579 6.36622 8.01672e-06 3.76646C-0.00185176 2.72938 0.319786 1.82362 1.05362 1.08043C1.73781 0.387616 2.57647 0.0122 3.54541 0.00879037C7.29864 -0.00448635 11.0519 -9.52207e-05 14.8052 0.0049675C16.4908 0.00729222 18.0082 1.30836 18.2757 2.9694C18.3164 3.22264 18.3424 3.48125 18.3432 3.73748C18.349 5.5022 18.3476 7.26692 18.3455 9.03169C18.3448 9.60011 18.1235 9.92346 17.6623 10.05C17.1759 10.1835 16.6615 9.86446 16.5728 9.36666C16.5474 9.22366 16.5382 9.07602 16.5379 8.93049C16.5357 7.2088 16.5338 5.48712 16.538 3.76548C16.54 2.97477 16.2434 2.35319 15.5124 2.00794C15.2641 1.89068 14.9683 1.82031 14.694 1.81938C11.0182 1.8073 7.34245 1.809 3.66666 1.81277C2.66925 1.8138 1.80135 2.54098 1.80642 3.78439C1.81902 6.89197 1.81065 9.99965 1.81065 13.1073C1.81065 15.1905 1.81277 17.2737 1.80926 19.357C1.80817 20.0037 2.00247 20.5552 2.53039 20.9617C2.87171 21.2245 3.26376 21.333 3.68613 21.335C4.64164 21.3396 5.59715 21.3359 6.55272 21.3366C7.13436 21.3371 7.53571 21.7005 7.54015 22.2286C7.5447 22.7721 7.14392 23.1437 6.5505 23.1442C5.62081 23.1448 4.69113 23.1443 3.76145 23.1443C1.5725 23.1443 0.00662055 21.5854 0.0026427 19.3907C-0.00211006 16.7824 0.00150617 14.174 0.00150617 11.5657ZM18.0804 12.291C19.197 12.3596 20.0744 12.8805 20.5235 13.9604C20.952 14.9906 20.8114 15.9972 20.0347 16.8155C18.8856 18.0262 17.6833 19.1866 16.5033 20.368C16.047 20.8248 15.5987 21.2901 15.128 21.7314C14.958 21.8908 14.7487 22.0457 14.5302 22.1094C13.336 22.4577 12.1359 22.7865 10.9328 23.1025C10.2695 23.2768 9.68556 22.7228 9.83928 22.0548C9.97173 21.4791 10.1622 20.9164 10.3333 20.3498C10.5116 19.7588 10.6844 19.1654 10.8866 18.5823C10.9628 18.3623 11.0764 18.1309 11.2374 17.9684C12.8608 16.3299 14.4961 14.7032 16.1314 13.0764C16.6572 12.5534 17.3068 12.3204 18.0804 12.291ZM15.9176 15.8513C15.866 15.9002 15.8035 15.9569 15.7438 16.0164C15.0072 16.7505 14.297 17.5137 13.5268 18.2106C12.8635 18.8108 12.362 19.4727 12.2236 20.3761C12.1965 20.553 12.1158 20.7219 12.0468 20.9342C12.6304 20.7701 13.1588 20.6286 13.6817 20.4695C13.8141 20.4292 13.9499 20.354 14.0489 20.2584C14.5186 19.8049 14.9758 19.3385 15.438 18.8773C16.0264 18.2902 16.6153 17.7037 17.1909 17.1301C16.7635 16.7009 16.3531 16.2888 15.9176 15.8513ZM18.513 15.7962C18.8319 15.5417 18.9964 15.2195 18.9013 14.7941C18.8168 14.4159 18.5584 14.202 18.1989 14.1258C17.794 14.04 17.4893 14.2323 17.2441 14.5312C17.6685 14.9543 18.0855 15.37 18.513 15.7962ZM9.17573 7.23486C7.62674 7.23486 6.07776 7.23714 4.52877 7.23352C4.08008 7.23242 3.73148 6.94277 3.64248 6.51807C3.55331 6.09234 3.74746 5.68839 4.14173 5.52072C4.27195 5.46534 4.42212 5.43103 4.56328 5.43082C7.63541 5.42587 10.7075 5.42633 13.7797 5.42762C14.3326 5.42788 14.7265 5.81027 14.7244 6.3353C14.7223 6.8596 14.3284 7.23382 13.771 7.23445C12.2392 7.23583 10.7075 7.23486 9.17573 7.23486ZM9.17478 10.8511C7.63442 10.8511 6.09401 10.8525 4.55365 10.8502C4.08525 10.8495 3.73298 10.5675 3.64231 10.1333C3.55345 9.70773 3.7482 9.30369 4.14259 9.13653C4.27292 9.08128 4.42305 9.04726 4.56424 9.04699C7.63639 9.04203 10.7085 9.04256 13.7807 9.04385C14.3331 9.04403 14.7269 9.42725 14.7243 9.95245C14.7218 10.4767 14.328 10.8501 13.7701 10.8506C12.2383 10.852 10.7066 10.8511 9.17478 10.8511ZM7.33234 14.4664C6.42054 14.4664 5.50879 14.4673 4.59698 14.4661C4.0221 14.4653 3.61615 14.0898 3.61621 13.5624C3.61626 13.0351 4.02216 12.6592 4.59709 12.6589C6.42928 12.6579 8.26141 12.658 10.0936 12.6589C10.6694 12.6591 11.0754 13.0347 11.0754 13.5625C11.0754 14.0904 10.6693 14.4654 10.0935 14.4661C9.17312 14.4672 8.25273 14.4664 7.33234 14.4664Z" fill="#373737"/></svg></div>
+        <span class="bnav-lbl">Contract</span>
+      </button>
+      <button class="bnav-btn" onclick="show('s-chat')" type="button">
+        <div class="bnav-icon"><svg width="24" height="24" viewBox="0 0 23 23" fill="none"><path d="M20.3761 16.9967C20.0383 16.16 19.7021 15.3533 19.3903 14.5372C19.3141 14.3375 19.2654 14.0994 19.2962 13.8927C19.3568 13.488 19.707 13.2104 20.1038 13.1782C20.4819 13.1475 20.8479 13.3824 21.0098 13.7776C21.3361 14.5739 21.6553 15.3731 21.9768 16.1714C22.2707 16.9008 22.5566 17.6335 22.8592 18.3593C23.141 19.0351 22.5984 19.6821 21.981 19.6219C21.8092 19.6051 21.6389 19.5282 21.4773 19.4575C19.9948 18.8087 18.5152 18.1535 17.0315 17.5074C16.9417 17.4683 16.8181 17.4646 16.7219 17.4895C16.1918 17.6272 15.6643 17.7757 15.1386 17.9297C15.0625 17.9521 14.9787 18.0097 14.9358 18.0754C13.8157 19.7935 12.2442 20.8885 10.2808 21.428C8.58372 21.8944 6.89562 21.8322 5.22879 21.266C5.09365 21.2201 4.98464 21.224 4.85335 21.2826C3.6739 21.8087 2.49292 22.3315 1.3084 22.8462C0.735761 23.0949 0.169264 22.8361 0.0397272 22.2445C-0.00427338 22.0436 0.0420572 21.7976 0.118543 21.5998C0.495819 20.6242 0.894243 19.6567 1.29276 18.6895C1.35594 18.5362 1.34702 18.4255 1.24916 18.2842C0.360636 17.0006 -0.0611784 15.5715 0.00715243 14.0145C0.0729292 12.5161 0.591795 11.1738 1.51097 9.98674C1.99466 9.36209 2.57137 8.83807 3.21171 8.3787C3.2834 8.32731 3.34851 8.22439 3.36002 8.13782C3.52146 6.924 3.88306 5.78065 4.5156 4.72621C5.265 3.47703 6.25147 2.45843 7.47139 1.66593C8.72218 0.853353 10.085 0.343672 11.564 0.128598C12.4184 0.00434819 13.2754 -0.0480761 14.1282 0.0541737C17.7088 0.483515 20.4701 2.16342 22.1215 5.44362C22.8002 6.79177 23.0466 8.2459 22.9022 9.75688C22.8823 9.96429 22.8774 10.1751 22.835 10.378C22.7343 10.8602 22.2844 11.1826 21.8381 11.1113C21.3304 11.0302 20.9924 10.5776 21.0675 10.0553C21.3317 8.21726 20.8929 6.55241 19.8109 5.0598C18.9792 3.9126 17.8866 3.07829 16.5882 2.51426C15.1933 1.90829 13.7324 1.68116 12.226 1.84655C10.1066 2.07914 8.28903 2.94325 6.8556 4.55124C6.05217 5.45253 5.50996 6.49515 5.25913 7.6742C4.89001 9.40913 5.21441 11.034 6.1485 12.5294C7.38213 14.5042 9.1797 15.6882 11.4418 16.1592C12.4768 16.3747 13.5337 16.4068 14.5749 16.1861C15.2109 16.0513 15.8372 15.8616 16.4561 15.6605C16.79 15.5521 17.0862 15.5596 17.4017 15.7022C18.3553 16.1334 19.3139 16.5531 20.271 16.9766C20.2907 16.9853 20.3142 16.9853 20.3761 16.9967ZM2.55627 20.3386C3.24881 20.0321 3.88736 19.7533 4.52241 19.4668C4.8305 19.3278 5.12488 19.3338 5.45036 19.435C6.02215 19.6128 6.60034 19.8071 7.19013 19.8828C8.77886 20.0869 10.2684 19.7477 11.6255 18.889C11.9664 18.6733 12.2722 18.4023 12.5941 18.1567L12.5702 18.1008C10.3839 17.9662 8.41301 17.2618 6.70962 15.8748C4.99942 14.4823 3.90273 12.7063 3.44986 10.5209C3.39936 10.5667 3.36589 10.5946 3.33524 10.6252C1.43865 12.5209 1.27475 15.5078 2.96693 17.5916C3.29532 17.996 3.36549 18.3943 3.15118 18.8697C2.94188 19.334 2.767 19.8139 2.55627 20.3386ZM10.3957 9.08974C10.4001 9.57995 9.99775 9.99085 9.50904 9.99529C9.01888 9.99975 8.60792 9.59739 8.60355 9.10869C8.59908 8.61883 9.00173 8.20754 9.4901 8.20316C9.98029 8.19869 10.3912 8.6011 10.3957 9.08974ZM13.0797 8.20313C13.5683 8.20128 13.9778 8.60714 13.9796 9.09527C13.9814 9.58399 13.5756 9.99346 13.0875 9.99526C12.5988 9.99712 12.1893 9.59116 12.1875 9.10311C12.1857 8.61442 12.5915 8.20496 13.0797 8.20313ZM16.6561 9.99437C16.1687 9.98863 15.7668 9.57535 15.7725 9.08582C15.7782 8.5984 16.1916 8.19643 16.6811 8.20221C17.1685 8.20798 17.5704 8.62126 17.5646 9.11078C17.5589 9.59819 17.1456 10.0002 16.6561 9.99437Z" fill="#373737"/></svg></div>
+        <span class="bnav-lbl">Chat</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ CONVO ══ -->
+  <div id="s-convo" class="screen">
+    <div class="convo-hdr">
+      <button class="convo-back" onclick="show('s-chat')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="#2D2D2D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="convo-user">
+        <div class="convo-av"><img id="convo-av-img" src="" alt=""></div>
+        <div class="convo-info">
+          <div class="convo-name" id="convo-name">Name</div>
+          <div class="convo-status">Online</div>
+        </div>
+      </div>
+      <div class="convo-actions">
+        <button class="convo-icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15.5 8.5L19 5V19L15.5 15.5V8.5Z" stroke="#373737" stroke-width="1.8" stroke-linejoin="round"/><rect x="2" y="7" width="13" height="10" rx="2" stroke="#373737" stroke-width="1.8"/></svg>
+        </button>
+        <button class="convo-icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6.62 10.79C8.06 13.62 10.38 15.93 13.21 17.38L15.41 15.18C15.68 14.91 16.08 14.82 16.43 14.94C17.55 15.31 18.76 15.51 20 15.51C20.55 15.51 21 15.96 21 16.51V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="#373737"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="convo-msgs" id="convo-msgs">
+      <div class="msg-date-divider">Today</div>
+      <div class="msg-wrap in">
+        <div class="msg-bubble" id="convo-msg1">Hey! Any update with the pipe repair?</div>
+        <span class="msg-time">09:12 AM</span>
+      </div>
+      <div class="msg-wrap in">
+        <div class="msg-bubble">I've been waiting for 2 days already.</div>
+        <span class="msg-time">09:13 AM</span>
+      </div>
+      <div class="msg-wrap out">
+        <div class="msg-bubble">Hi! Sorry for the delay, I was finishing another job.</div>
+        <span class="msg-time">09:20 AM</span>
+      </div>
+      <div class="msg-wrap out">
+        <div class="msg-bubble">I can come over tomorrow morning around 9am. Does that work for you?</div>
+        <span class="msg-time">09:21 AM</span>
+      </div>
+      <div class="msg-wrap in">
+        <div class="msg-bubble">Yes, that works! Please bring extra pipe fittings just in case.</div>
+        <span class="msg-time">09:35 AM</span>
+      </div>
+      <div class="msg-wrap out">
+        <div class="msg-bubble">Sure, I'll bring everything needed. See you tomorrow!</div>
+        <span class="msg-time">09:36 AM</span>
+      </div>
+    </div>
+    <div class="convo-bar">
+      <input class="convo-input" id="convo-input" type="text" placeholder="Type a message...">
+      <button class="convo-send" onclick="sendMsg()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<style>
+/* ════════════════════════════════════════
+   SCREEN 9 – CONNECT
+════════════════════════════════════════ */
+#s-connect { background: #F7F7F7; }
+
+.conn-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 18px 10px;
+  background: #fff;
+  flex-shrink: 0;
+}
+.conn-hdr h2 { font-size: 22px; font-weight: 800; color: #2D2D2D; }
+.conn-filter-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: #F3F3F3; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.conn-search {
+  padding: 10px 18px 0;
+  background: #fff;
+  flex-shrink: 0;
+}
+.conn-search-row {
+  display: flex; align-items: center; gap: 10px;
+  background: #F3F3F3; border-radius: 14px;
+  padding: 0 14px; height: 44px;
+  margin-bottom: 14px;
+}
+.conn-search-row input {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-size: 14px; color: #2D2D2D; font-family: 'Roboto', sans-serif;
+}
+.conn-search-row input::placeholder { color: #bbb; }
+
+.conn-tabs {
+  display: flex; gap: 0;
+  padding: 0 18px 0;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.conn-tab {
+  flex: 1; text-align: center;
+  padding: 10px 0 11px;
+  font-size: 13px; font-weight: 600; color: #aaa;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+.conn-tab.active { color: #FF6A00; border-bottom-color: #FF6A00; }
+
+.conn-list {
+  flex: 1; overflow-y: auto; padding: 14px 18px 110px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.conn-list::-webkit-scrollbar { display: none; }
+
+.conn-card {
+  background: #fff; border-radius: 16px;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.conn-av {
+  width: 54px; height: 54px; border-radius: 50%; overflow: hidden;
+  background: #ddd; flex-shrink: 0;
+}
+.conn-av img { width: 100%; height: 100%; object-fit: cover; }
+.conn-info { flex: 1; min-width: 0; }
+.conn-name { font-size: 15px; font-weight: 700; color: #2D2D2D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.conn-role { font-size: 12px; color: #888; margin-top: 2px; }
+.conn-rating { display: flex; align-items: center; gap: 3px; margin-top: 4px; }
+.conn-rating svg { width: 12px; height: 12px; }
+.conn-rating span { font-size: 12px; color: #555; font-weight: 600; }
+.conn-rating .conn-reviews { font-weight: 400; color: #aaa; }
+.conn-btn {
+  height: 34px; padding: 0 16px;
+  border-radius: 20px; font-size: 12px; font-weight: 700;
+  cursor: pointer; border: none; flex-shrink: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.conn-btn.add { background: #FF6A00; color: #fff; }
+.conn-btn.pending { background: #F3F3F3; color: #888; }
+.conn-btn.connected { background: #E8F5E9; color: #4CAF50; }
+
+/* ════════════════════════════════════════
+   SCREEN 8 – CONVERSATION
+════════════════════════════════════════ */
+#s-convo { background: #F5F5F5; }
+
+.convo-hdr {
+  display: flex; align-items: center;
+  padding: 14px 16px;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  flex-shrink: 0;
+  z-index: 5;
+}
+.convo-back {
+  background: none; border: none; cursor: pointer;
+  padding: 4px 8px 4px 0;
+  display: flex; align-items: center;
+  flex-shrink: 0;
+}
+.convo-user {
+  display: flex; align-items: center; gap: 10px;
+  flex: 1;
+}
+.convo-av {
+  width: 42px; height: 42px; border-radius: 50%; overflow: hidden;
+  background: #ddd; flex-shrink: 0;
+}
+.convo-av img { width: 100%; height: 100%; object-fit: cover; }
+.convo-info { display: flex; flex-direction: column; }
+.convo-name { font-size: 15px; font-weight: 700; color: #2D2D2D; }
+.convo-status { font-size: 12px; color: #4CAF50; font-weight: 500; }
+.convo-actions { display: flex; gap: 8px; }
+.convo-icon-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #F5F5F5; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.convo-msgs {
+  flex: 1; overflow-y: auto; padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.convo-msgs::-webkit-scrollbar { display: none; }
+
+.msg-wrap { display: flex; flex-direction: column; }
+.msg-wrap.out { align-items: flex-end; }
+.msg-wrap.in  { align-items: flex-start; }
+
+.msg-bubble {
+  max-width: 72%; padding: 10px 14px;
+  border-radius: 18px; font-size: 14px; line-height: 1.45;
+  word-break: break-word;
+}
+.msg-wrap.in  .msg-bubble { background: #fff; color: #2D2D2D; border-bottom-left-radius: 4px; }
+.msg-wrap.out .msg-bubble { background: #FF6A00; color: #fff; border-bottom-right-radius: 4px; }
+.msg-time { font-size: 10px; color: #aaa; margin-top: 3px; padding: 0 4px; }
+
+.msg-date-divider {
+  text-align: center; font-size: 11px; color: #aaa;
+  padding: 4px 12px; background: rgba(0,0,0,0.05);
+  border-radius: 20px; align-self: center; margin: 4px 0;
+}
+
+.convo-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px 22px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.convo-input {
+  flex: 1; height: 44px; border-radius: 22px;
+  border: 1.5px solid #eee; background: #F8F8F8;
+  padding: 0 16px; font-size: 14px; outline: none;
+  font-family: 'Roboto', sans-serif; color: #2D2D2D;
+}
+.convo-input::placeholder { color: #bbb; }
+.convo-send {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #FF6A00; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.convo-send:active { opacity: 0.85; }
+</style>
+
+<style>
+.toast {
+  position: absolute; bottom: 110px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.75); color: #fff;
+  padding: 10px 20px; border-radius: 20px;
+  font-size: 13px; white-space: nowrap;
+  z-index: 999; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.toast.show { opacity: 1; }
+</style>
+<div class="toast" id="toast"></div>
+
+<script>
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2000);
+  }
+
+  function shareProfile() {
+    if (navigator.share) {
+      navigator.share({ title: 'John Anderson', text: 'Check out this handyman!', url: window.location.href });
+    } else {
+      showToast('Link copied to clipboard!');
+    }
+  }
+
+  function toggleLike(btn) {
+    var svg = btn.querySelector('svg path');
+    var liked = btn.getAttribute('data-liked') === '1';
+    if (liked) {
+      svg.setAttribute('fill', '#363636');
+      btn.setAttribute('data-liked', '0');
+      showToast('Removed from favourites');
+    } else {
+      svg.setAttribute('fill', '#FF6A00');
+      btn.setAttribute('data-liked', '1');
+      showToast('Added to favourites');
+    }
+  }
+
+  function toggleBookmark(btn) {
+    var svg = btn.querySelector('svg path');
+    var saved = btn.getAttribute('data-saved') === '1';
+    if (saved) {
+      svg.setAttribute('fill', '#363636');
+      btn.setAttribute('data-saved', '0');
+      showToast('Bookmark removed');
+    } else {
+      svg.setAttribute('fill', '#FF6A00');
+      btn.setAttribute('data-saved', '1');
+      showToast('Bookmarked!');
+    }
+  }
+
+  function showFilterToast() {
+    showToast('Filter options coming soon');
+  }
+
+  function sendConnectionRequest(btn) {
+    var sent = btn.getAttribute('data-sent') === '1';
+    if (sent) {
+      btn.textContent = 'SEND CONNECTION REQUEST';
+      btn.style.background = '#FF6A00';
+      btn.setAttribute('data-sent', '0');
+      showToast('Request cancelled');
+    } else {
+      btn.textContent = 'REQUEST SENT ✓';
+      btn.style.background = '#4CAF50';
+      btn.setAttribute('data-sent', '1');
+      showToast('Connection request sent!');
+    }
+  }
+
+  function switchConnTab(el) {
+    var tabs = el.parentElement.querySelectorAll('.conn-tab');
+    tabs.forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  function toggleConnect(btn) {
+    if (btn.classList.contains('add')) {
+      btn.classList.remove('add');
+      btn.classList.add('pending');
+      btn.textContent = 'Pending';
+      showToast('Connection request sent');
+    } else if (btn.classList.contains('pending')) {
+      btn.classList.remove('pending');
+      btn.classList.add('add');
+      btn.textContent = 'Connect';
+      showToast('Request cancelled');
+    } else if (btn.classList.contains('connected')) {
+      btn.classList.remove('connected');
+      btn.classList.add('add');
+      btn.textContent = 'Connect';
+      showToast('Disconnected');
+    }
+  }
+
+  function openConvo(name, avatar, lastMsg) {
+    document.getElementById('convo-name').textContent = name;
+    document.getElementById('convo-av-img').src = avatar;
+    document.getElementById('convo-av-img').alt = name;
+    // Update first received message to match the last chat message
+    if (lastMsg) {
+      var m = document.getElementById('convo-msg1');
+      if (m) m.textContent = lastMsg;
+    }
+    // Scroll messages to bottom
+    var msgs = document.getElementById('convo-msgs');
+    setTimeout(function() { msgs.scrollTop = msgs.scrollHeight; }, 50);
+    show('s-convo');
+  }
+
+  function sendMsg() {
+    var input = document.getElementById('convo-input');
+    var text = input.value.trim();
+    if (!text) return;
+    var msgs = document.getElementById('convo-msgs');
+    var now = new Date();
+    var h = now.getHours(); var m = now.getMinutes();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    var timeStr = h + ':' + (m < 10 ? '0' + m : m) + ' ' + ampm;
+    var wrap = document.createElement('div');
+    wrap.className = 'msg-wrap out';
+    wrap.innerHTML = '<div class="msg-bubble">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><span class="msg-time">' + timeStr + '</span>';
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    input.value = '';
+  }
+
+  var cur = 's-splash';
+
+  function show(id) {
+    var from = document.getElementById(cur);
+    var to   = document.getElementById(id);
+    if (!to || id === cur) return;
+    if (from) from.classList.remove('active');
+    to.classList.add('active');
+    cur = id;
+  }
+
+  function openDrawer() {
+    show('s-sidebar');
+    setTimeout(function() {
+      document.getElementById('drawer').classList.add('open');
+    }, 10);
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    setTimeout(function() { show('s-home'); }, 300);
+  }
+
+  function closeSidebarBg(e) {
+    if (e.target === document.getElementById('s-sidebar')) closeDrawer();
+  }
+
+  function togglePw() {
+    var input = document.getElementById('pw');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  // Fix overlapping nav icon in chat
+  document.querySelectorAll('.bnav-icon').forEach(function(el) {
+    el.style.position = 'relative';
+    el.style.display = 'flex';
+    el.style.alignItems = 'center';
+    el.style.justifyContent = 'center';
+  });
+
+  setTimeout(function() {
+    if (cur === 's-splash') show('s-login');
+  }, 2000);
+</script>
+</body>
+</html>
