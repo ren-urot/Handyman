@@ -1,0 +1,17 @@
+{
+  "name": "handyman",
+  "version": "1.0.0",
+  "description": "HANDYWORKS mobile app SPA",
+  "scripts": {
+    "deploy": "gh-pages -d . --dotfiles --nojekyll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ren-urot/Handyman.git"
+  },
+  "homepage": "https://ren-urot.github.io/Handyman",
+  "license": "ISC",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
